@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TestComponent from './TestComponent.jsx';
 import GridComponent from './components/gridComponent';
 import MetaDataComponent from './components/metaDataComponent'
-
-
 
 ReactDOM.render(
   <div>
@@ -17,7 +14,6 @@ ReactDOM.render(
   ,
   document.getElementById('app')
 );
-
 
 
 

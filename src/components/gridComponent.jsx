@@ -69,6 +69,7 @@ class GridComponent extends React.Component {
     console.log('-------------------');
     console.log(tableJsonOutput)
     //console.log(JSON.stringify(tableJsonOutput));
+    this.postData(tableJsonOutput);
 
   }
 
@@ -167,9 +168,68 @@ class GridComponent extends React.Component {
   }
 
 
+
+
+  postData(dta) {
+  fetch('http://localhost:23100/parse/html', {
+  method: 'POST',
+  headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': 'http://localhost:8080',
+    'Access-Control-Allow-Methods': 'OPTIONS, TRACE, GET, HEAD, POST, PUT'
+  },
+  body: JSON.stringify(dta)
+})
+  }
+
+
+
+//'Access-Control-Allow-Origin': '*',
+//'Access-Control-Allow-Methods': 'OPTIONS, TRACE, GET, HEAD, POST, PUT'
+  //, O
+  // 'Content-Type': 'application/json',
+  // ,
+  // 'Access-Control-Allow-Origin': 'http://localhost:8080',
+  // 'Access-Control-Allow-Methods': 'OPTIONS, TRACE, GET, HEAD, POST, PUT',
+  // 'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept, X-Requested-With'
+  // postData(dta) {
+  //   fetch('https://mywebsite.com/endpoint/', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Accept': 'application/json',
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify({
+  //     firstParam: 'yourValue',
+  //     secondParam: '{yourOtherValue}',
+  //   })
+  // })
+  //   }
+
+
+
+
   componentDidMount() {
     console.log('@component did mount');
+
+
+    // this.setState({ isLoading: true });
+    // fetch(API + DEFAULT_QUERY)
+    // .then(response => {
+    //   if (response.ok) {
+    //     return response.json();
+    //   } else {
+    //     throw new Error('Something went wrong ...');
+    //   }
+    // })
+    // .then(data => this.setState({ hits: data.hits, isLoading: false }))
+    // .catch(error => this.setState({ error, isLoading: false }));
+
   }
+
+
+
 
   render() {
     return <div className='gridContainer'>

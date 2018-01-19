@@ -5,7 +5,7 @@ module.exports = {
     './src/index.js'
   ],
   module: {
-    loaders: [{
+    rules: [{
       test: /\.jsx?$/,
       exclude: /node_modules/,
       loader: 'react-hot-loader!babel-loader'

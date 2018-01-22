@@ -2,19 +2,27 @@ import React from 'react';
 import HotTable from 'react-handsontable';
 
 
+//var hot=null;
+
 class GridComponent extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = { testCount: 0 };
+    this.myRef;
   }
 
 
 
   handleChange(event) {
 
-    //console.log(hot);
-    var table = hot.getElementsByTagName('table')[0];
+    var Hot = this.tableRef.hotInstance;
+    console.log(Hot);
+    //  var table = Hot.getElementsByTagName('table')[0];
+    var table = Hot.table;
+    console.log(table);
+
+
 
     //init
     var tableJsonOutput = { 'filename': 'abc1234' };
@@ -26,18 +34,20 @@ class GridComponent extends React.Component {
     this.props.previewPostData(tableJsonOutput);
   }
 
-
   render() {
+
+    //this.myRef = "Hot"; //(el) => this.btnRef = el;
     return <div className='gridContainer'>
       <HotTable
         root="hot"
         data={this.props.handsontableData}
         contextMenu={true}
-        colHeaders={true}
+        colHeaders={true} // this should be the same as ignore_first_row 
+        rowHeaders={true} // this should be the same as ignore_first_column 
         mergeCells={true}
         manualColumnResize={true}
-        manualRowResize={true}
-        ref="hot"
+        manualRowResize={false}
+        ref={(c) => { this.tableRef = c; }}
       /><br />
       <button onClick={(e) => this.handleChange(e)}>preview</button>
     </div>;

@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import GridComponent from './gridComponent';
-import MetaDataComponent from './metaDataComponent';
+import GridComponent from './grid';
+import MetaDataComponent from './metaData';
 
 
 
 const previewURi = 'http://localhost:23100/parse/html';
 const ignore_first_row=true;
 const ignore_first_column=true;
+const ignore_column_width="50px"
 
 
 class ParentContainer extends Component {
@@ -81,9 +82,18 @@ data["source"] = this.state.metaSource;
 data["units"] = this.state.metaUnits;
 data["ignore_first_row"]= ignore_first_row;
 data["ignore_first_column"]=ignore_first_column;
-data["header_rows"]=-1;
-data["header_cols"]=-1;
-data["size_units"]=-1;
+data["column_width_to_ignore"]=ignore_column_width;
+data["header_rows"]=1;
+data["header_cols"]=1;
+data["size_units"]="%";
+data["alignment_classes"] = {
+  "top": "htTop",
+  "middle": "htMiddle",
+  "bottom": "htBottom",
+  "left": "htLeft",
+  "center": "htCenter",
+  "right": "htRight"
+}
 
 
 console.log(data);
@@ -94,7 +104,7 @@ console.log(data);
 
 addFootNotes() {
   let notelist = this.state.metaNotes.split( "\n" );
-  return {footnotes:notelist}
+  return notelist;
 }
 
 

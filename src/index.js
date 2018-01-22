@@ -1,13 +1,13 @@
 import React  from 'react';
 import ReactDOM from 'react-dom';
-import ParentContainer from './components/parentContainer'
+import GridContainer from './components/gridContainer'
 
 
 
 ReactDOM.render(
   <div>
   <div>
-   <ParentContainer/>
+   <GridContainer/>
   </div>
   </div>
   ,
@@ -16,4 +16,4 @@ ReactDOM.render(
 
 
 
-module.hot.accept();
+//module.hot.accept();

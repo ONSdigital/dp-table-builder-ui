@@ -4,9 +4,11 @@ import ReactDOM from 'react-dom';
 import GridComponent from './grid';
 import MetaDataComponent from './metaData';
 
+import FileSaver from 'file-saver'
 
 
 const previewURi = 'http://localhost:23100/parse/html';
+const renderPrefix = 'http://localhost:23100/render/';
 const ignore_first_row=true;
 const ignore_first_column=true;
 const ignore_column_width="50px"
@@ -120,33 +122,53 @@ addCellformat() {
 
 }
 
-  postPreviewData(dta) {
-    console.log('dta in');
-    console.log(dta)
-    fetch(previewURi, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dta)
+postPreviewData(dta) {
+  console.log('dta in');
+  console.log(dta)
+  fetch(previewURi, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dta)
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
     })
-      .then((response) => {
-        console.log(response);
-        return response.json();
+    .then((data) => {
+      console.log('returned...', data);
+      this.setState({
+        previewHtml: data.preview_html,
+        parsedData: data
       })
-      .then((data) => {
-        console.log('returned...', data);
-        this.setState({
-          previewHtml: data.preview_html,
-          parsedData: data
-        })
-        this.changeView('preview');
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
+      this.changeView('preview');
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+postRenderData(fileType) {
+  var renderJson = JSON.stringify(this.state.parsedData.render_json)
+  fetch(renderPrefix + fileType, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: renderJson
+  })
+  .then((response) => {
+    return response.blob()
+  })
+  .then((data) => {
+    FileSaver.saveAs(data, this.state.parsedData.render_json.filename + '.' + fileType);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
 
 
 
@@ -184,6 +206,8 @@ addCellformat() {
           <div dangerouslySetInnerHTML={{ __html: this.state.previewHtml }}></div>
           <br />
           <button onClick={(e) => this.changeView('handsontable')}>back</button> &nbsp;
+          <button onClick={(e) => this.postRenderData('xlsx')}>preview xlsx</button> &nbsp;
+          <button onClick={(e) => this.postRenderData('csv')}>preview csv</button> &nbsp;
       </div>
       )
     }

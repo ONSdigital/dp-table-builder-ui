@@ -1,0 +1,52 @@
+body {
+    font-family: "Open Sans",Helvetica,Arial,sans-serif;
+}
+.align-right {
+    text-align: right
+}
+.align-left {
+    text-align: left
+}
+.align-center {
+    text-align: center
+}
+.align-top {
+    vertical-align: text-top
+}
+.align-middle {
+    vertical-align: middle
+}
+.align-bottom {
+    vertical-align: text-bottom
+}
+
+.figure__table caption {
+    font-size: 125%;
+    font-weight: bold
+}
+span.caption__subtitle {
+    font-size: 85%;
+}
+a.footnote__link {
+    vertical-align: super;
+    font-size: 70%;
+    text-decoration: none;
+}
+.visuallyhidden {
+    display: none
+}
+.figure__table footer li:target {
+    animation: pulse 5s;
+    animation-iteration-count: 1;
+}
+@keyframes pulse {
+    0% {
+      background-color: yellow;
+    }
+    100% {
+      background-color:inherit;
+    }
+}
+a.footnote__back-link {
+    font-size: 85%;
+}

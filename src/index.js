@@ -1,12 +1,19 @@
-import React from 'react';
+import React  from 'react';
 import ReactDOM from 'react-dom';
+import GridContainer from './components/gridContainer';
 
-const title = ' dp-table-builder-ui  boilerplate - ready...';
+import styles from "./assets/scss/main.scss";
 
 ReactDOM.render(
-  <div><h1>{title}</h1></div>,
+  <div>
+  <div>
+   <GridContainer/>
+  </div>
+  </div>
+  ,
   document.getElementById('app')
 );
-var x=1
-cxcx
-module.hot.accept();
+
+
+
+//module.hot.accept();

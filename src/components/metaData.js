@@ -23,29 +23,29 @@ class MetaData extends Component {
         return (
             <div className='metaContainer'>
                 <h2>Meta Data</h2>
-                <p>
-                    <div>
+              
+                    <div className="block">
                         <label>Title:</label>
-                        <input value={this.props.metaTitle} id='metaTitle' placeholder='Title' onChange={this.getMetaContent.bind(this)} />
+                        <input value={this.props.metaTitle} id='metaTitle' onChange={this.getMetaContent.bind(this)} />
                     </div>
-                    <div>
+                    <div className="block">
                         <label >Subtitle:</label>
-                        <input value={this.props.metaSubtitle} id='metaSubtitle' placeholder='Subtitle' onChange={this.getMetaContent.bind(this)} /> <br />
+                        <input value={this.props.metaSubtitle} id='metaSubtitle' onChange={this.getMetaContent.bind(this)} /> <br />
                     </div>
 
-                    <div>
+                    <div className="block">
                         <label >Units:</label>
-                        <input value={this.props.metaUnits} id='metaUnits' placeholder='Units' onChange={this.getMetaContent.bind(this)} /> <br />
+                        <input value={this.props.metaUnits} id='metaUnits'  onChange={this.getMetaContent.bind(this)} /> <br />
                     </div>
 
-                    <div>
+                    <div className="block">
                         <label >Source:</label>
-                        <input value={this.props.metaSource} id='metaSource' placeholder='Source' onChange={this.getMetaContent.bind(this)} /> <br />
+                        <input value={this.props.metaSource} id='metaSource'  onChange={this.getMetaContent.bind(this)} /> <br />
                     </div>
 
-                    <div>
-                        <label >Notess:</label>
-                        <textarea value={this.props.metaNotes} id='metaNotes' placeholder="Notes" onChange={this.getMetaContent.bind(this)} /> <br />
+                    <div className="block">
+                        <label >Notes:</label>
+                        <textarea value={this.props.metaNotes} id='metaNotes'  onChange={this.getMetaContent.bind(this)} /> <br />
                     </div>
 
                     <div>
@@ -60,14 +60,14 @@ class MetaData extends Component {
 
                     <div>
                         <label >Header Cols:</label>
-                        <input value={this.props.metaHeadercols} id='metaHeadercols' placeholder='Header columns' type="number" min="0" max="999" onChange={this.getMetaContent.bind(this)} /> <br />
+                        <input value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onChange={this.getMetaContent.bind(this)} /> <br />
                     </div>
                     <div>
                         <label >Header Rows:</label>
-                        <input value={this.props.metaHeaderrows} id='metaHeaderrows' placeholder='Header rows' type="number" min="0" max="999" onChange={this.getMetaContent.bind(this)} /> <br />
+                        <input value={this.props.metaHeaderrows} id='metaHeaderrows'  type="number" min="0" max="999" onChange={this.getMetaContent.bind(this)} /> <br />
                     </div>
 
-                </p>
+               
             </div>
         );
     }

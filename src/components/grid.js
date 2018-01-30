@@ -32,6 +32,11 @@ class GridComponent extends Component {
       modifyColWidth: () => {
         this.updateDataDump()
       },
+      afterOnCellMouseOver: (event, coords, tableData) => {
+        console.log(coords);
+        this.updateCellMouseOver(coords);
+      },
+
 
     });
 
@@ -39,9 +44,13 @@ class GridComponent extends Component {
   }
 
 
+
+
+
+
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(' shouldComponentUpdate in GRID nextProps...');
-    console.log(nextProps);
+    // console.log(' shouldComponentUpdate in GRID nextProps...');
+    // console.log(nextProps);
     return false;
   }
 
@@ -67,25 +76,10 @@ class GridComponent extends Component {
   }
 
 
+  updateCellMouseOver(coords) {
+    this.props.cellMove(coords);
 
-
-  // handleChange(event) {
-  //   var Hot = this.tableRef.hotInstance;
-  //   console.log(Hot);
-  //   var table = Hot.table;
-  //   console.log(table);
-
-  //   //init
-  //   var tableJsonOutput = { 'filename': 'abc1234' };
-  //   tableJsonOutput['table_html'] = table.outerHTML;
-  //   tableJsonOutput['current_table_width'] = table.clientWidth
-  //   tableJsonOutput['current_table_height'] = table.clientHeight
-  //   tableJsonOutput['single_em_height'] = document.getElementById("emHeight").clientHeight
-  //   console.log(table.clientWidth);
-  //   console.log(table.clientHeight);
-  //   console.log(document.getElementById("emHeight").clientHeight);
-  //   this.props.previewPostData(tableJsonOutput);
-  // }
+  }
 
 
 
@@ -94,10 +88,12 @@ class GridComponent extends Component {
   render() {
 
     var emHeightStyle = { visibility: "hidden", display: 'inline-block', fontSize: '1em', margin: 0, padding: 0, height: 'auto', lineHeight: 1, border: 0 };
-    return <div className='gridContainer'>
+    return <div className='grid'>
       <HotTable
         root="hot"
         stretchH="all"
+        renderAllRows="true"
+        height="350"
         data={this.props.handsontableData}
         contextMenu={true}
         colHeaders={true} // this should be the same as ignore_first_row 

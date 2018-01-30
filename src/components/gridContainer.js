@@ -27,17 +27,9 @@ class GridContainer extends Component {
     super(props);
 
     this.state = {
-      tableSettings: { config: "masood1" },
       view: 'handsontable',
       tableJsonOutput: [],
-      handsontableData: [
-        ["", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"],
-        ["2016", 10, 11, 12, 13, 14, 15, 16, 17, 18, 18, 19, 20, 21, 22, 23, 24],
-        ["2017", 10, 11, 12, 13, 14, 15, 16, 17, 18, 18, 19, 20, 21, 22, 23, 24],
-        ["2018", 10, 11, 12, 13, 14, 15, 16, 17, 18, 18, 19, 20, 21, 22, 23, 24],
-        ["2019", 10, 11, 12, 13, 14, 15, 16, 17, 18, 18, 19, 20, 21, 22, 23, 24],
-        ["2020", 10, 11, 12, 13, 14, 15, 16, 17, 18, 18, 19, 20, 21, 22, 23, 24]
-      ],
+      handsontableData: [[" "], [" "]],
       previewHtml: '',
       parsedData: '',
       rawData: '',
@@ -51,7 +43,8 @@ class GridContainer extends Component {
       metaHeaderrows: '',
       colWidths: [],
       mergeCells: true,
-      cellAlignments: []
+      cellAlignments: [],
+      colrowStatus: {}
     };
 
     //callback handlers
@@ -59,6 +52,7 @@ class GridContainer extends Component {
     this.changeview = this.changeView.bind(this);
     this.previewPostData = this.processHandsontableData.bind(this);
     this.updateUserTableData = this.updateTableJsonOutput.bind(this);
+    this.cellMove = this.cellMove.bind(this);
   }
 
 
@@ -106,6 +100,18 @@ class GridContainer extends Component {
   }
 
 
+
+
+
+
+  cellMove(cellCoord) {
+    console.log('mouse move detected in container');
+    console.log(cellCoord);
+    // this.setState({colrowStatus:cellCoord});
+    this.setState({
+      colrowStatus: cellCoord
+    });
+  }
 
 
   setMetaData(metaObject) {
@@ -367,7 +373,7 @@ class GridContainer extends Component {
   render() {
     if (this.state.view === 'handsontable') {
       return (
-        <div>
+        <div className="gridContainer">
           <MetaDataComponent
             // setMetaDataCallbk={this.setMetaData.bind(this)}
             setMetaData={this.setMetaDataCallbk}
@@ -388,15 +394,15 @@ class GridContainer extends Component {
             colWidths={this.state.colWidths}
             mergeCells={this.state.mergeCells}
             cellAlignments={this.state.cellAlignments}
-          />&nbsp;
-        <div className="statusBar" >
-            <button onClick={(e) => this.saveGrid(e)} >save</button>&nbsp;
+            cellMove={this.cellMove}
+          />&nbsp;<br />
+          <div className="statusBar">
+            <div className="statusBtnsGroup">
+              <button onClick={(e) => this.saveGrid(e)} >save</button>&nbsp;
         <button onClick={(e) => this.loadGrid(e)}>load</button> &nbsp;
-
             <button onClick={(e) => this.previewGrid(e)}>preview html</button> &nbsp;
-        <button onClick={(e) => this.postRenderData('xlsx')}>preview xlsx</button> &nbsp;
-          <button onClick={(e) => this.postRenderData('csv')}>preview csv</button> &nbsp;
-        </div>
+</div><div className="rowColStatus">Row:&nbsp;{this.state.colrowStatus.row}&nbsp;&nbsp;Col:&nbsp;{this.state.colrowStatus.col}</div>
+          </div>
 
           {/* <h1>Current table for parsing</h1>
           <div id="debug">{JSON.stringify(this.state.tableJsonOutput)}</div>
@@ -417,11 +423,13 @@ class GridContainer extends Component {
 
     if (this.state.view === 'preview') {
       return (
-        <div>
-          <h1>this is preview</h1>
-          <div dangerouslySetInnerHTML={{ __html: this.state.previewHtml }}></div>
+        <div className="previewContainer">
+          <h1>preview</h1>
+          <div className="previewhtml" dangerouslySetInnerHTML={{ __html: this.state.previewHtml }}></div>
           <br />
           <button onClick={(e) => this.rebuildGrid()}>back</button> &nbsp;
+          <button onClick={(e) => this.postRenderData('xlsx')}>preview xlsx</button> &nbsp;
+          <button onClick={(e) => this.postRenderData('csv')}>preview csv</button> &nbsp;
 
       </div>
       )

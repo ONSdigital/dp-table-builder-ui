@@ -4,7 +4,8 @@ import ReactDOM from 'react-dom';
 import Grid from './grid';
 import MetaData from './metaData';
 
-import FileSaver from 'file-saver'
+import FileSaver from 'file-saver';
+import DataService from '../utility/dataService';
 
 
 const previewURi = 'http://localhost:23100/parse/html';
@@ -310,62 +311,104 @@ class GridContainer extends Component {
 
 
 
-  postPreviewData(dta) {
-    console.log('dta in');
-    console.log(dta)
-    fetch(previewURi, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dta)
+  postPreviewData(data) {
+    console.log('data in');
+    console.log(data);
+
+    var p = DataService.tablepostPreview(data)
+    Promise.resolve(p).then((data) => {
+      /* do something with the result */
+      console.log('@@@@p resolve', data);
+      data.render_json.current_table_width = data.current_table_width;
+      data.render_json.current_table_height = data.current_table_height;
+      data.render_json.single_em_height = data.single_em_height;
+      data.render_json.cell_size_units = data.cell_size_units;
+      this.setState({
+        previewHtml: data.preview_html,
+        parsedData: data,
+        view: 'preview'
+
+      })
     })
-      .then((response) => {
-        console.log(response);
-        return response.json();
+      .catch(function (e) {
+        /* error :( */
+        console.log('@@@@p error',e);
+
       })
-      .then((data) => {
-        console.log('returned...', data);
-        data.render_json.current_table_width = dta.current_table_width;
-        data.render_json.current_table_height = dta.current_table_height;
-        data.render_json.single_em_height = dta.single_em_height;
-        data.render_json.cell_size_units = dta.cell_size_units;
-        this.setState({
-          previewHtml: data.preview_html,
-          parsedData: data,
-          view: 'preview'
-        })
-        //this.changeView('preview');
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
   }
-
-
 
 
 
   postRenderData(fileType) {
-    var renderJson = JSON.stringify(this.state.parsedData.render_json)
-    fetch(renderPrefix + fileType, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: renderJson
+
+    var p = DataService.tableRenderFilePreview(this.state.parsedData.render_json,fileType)
+    Promise.resolve(p).then((data) => {
+      /* do something with the result */
+      FileSaver.saveAs(data, this.state.parsedData.render_json.filename + '.' + fileType);
     })
-      .then((response) => {
-        return response.blob()
+      .catch(function (e) {
+        /* error :( */
+        console.log('@@@@p error',e);
+
       })
-      .then((data) => {
-        FileSaver.saveAs(data, this.state.parsedData.render_json.filename + '.' + fileType);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
+    }
+
+
+
+
+  // fetch(previewURi, {
+  //   method: 'POST',
+  //   headers: {
+  //     'Accept': 'application/json',
+  //     'Content-Type': 'application/json'
+  //   },
+  //   body: JSON.stringify(dta)
+  // })
+  //   .then((response) => {
+  //     console.log(response);
+  //     return response.json();
+  //   })
+  //   .then((data) => {
+  //     console.log('returned...', data);
+  //     data.render_json.current_table_width = dta.current_table_width;
+  //     data.render_json.current_table_height = dta.current_table_height;
+  //     data.render_json.single_em_height = dta.single_em_height;
+  //     data.render_json.cell_size_units = dta.cell_size_units;
+  //     this.setState({
+  //       previewHtml: data.preview_html,
+  //       parsedData: data,
+  //       view: 'preview'
+  //     })
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   });
+
+  //}
+
+
+
+
+
+  // postRenderData(fileType) {
+  //   var renderJson = JSON.stringify(this.state.parsedData.render_json)
+  //   fetch(renderPrefix + fileType, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: renderJson
+  //   })
+  //     .then((response) => {
+  //       return response.blob()
+  //     })
+  //     .then((data) => {
+  //       FileSaver.saveAs(data, this.state.parsedData.render_json.filename + '.' + fileType);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // }
 
 
   render() {

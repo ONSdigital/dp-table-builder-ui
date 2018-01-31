@@ -26,21 +26,21 @@ class MetaData extends Component {
               
                     <div className="block">
                         <label>Title:</label>
-                        <input  value={this.props.metaTitle} id='metaTitle' onChange={this.getMetaContent} />
+                        <input  maxLength="300" value={this.props.metaTitle} id='metaTitle' onChange={this.getMetaContent} />
                     </div>
                     <div className="block">
                         <label >Subtitle:</label>
-                        <input value={this.props.metaSubtitle} id='metaSubtitle' onChange={this.getMetaContent} /> <br />
+                        <input  maxLength="300" value={this.props.metaSubtitle} id='metaSubtitle' onChange={this.getMetaContent} /> <br />
                     </div>
 
                     <div className="block">
                         <label >Units:</label>
-                        <input value={this.props.metaUnits} id='metaUnits'  onChange={this.getMetaContent} /> <br />
+                        <input  maxLength="20" value={this.props.metaUnits} id='metaUnits'  onChange={this.getMetaContent} /> <br />
                     </div>
 
                     <div className="block">
                         <label >Source:</label>
-                        <input value={this.props.metaSource} id='metaSource'  onChange={this.getMetaContent} /> <br />
+                        <input  maxLength="200" value={this.props.metaSource} id='metaSource'  onChange={this.getMetaContent} /> <br />
                     </div>
 
                     <div className="block">
@@ -60,11 +60,11 @@ class MetaData extends Component {
 
                     <div>
                         <label >Header Cols:</label>
-                        <input className="sml" value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
+                        <input   className="sml" value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
                     </div>
                     <div>
                         <label >Header Rows:</label>
-                        <input className="sml" value={this.props.metaHeaderrows} id='metaHeaderrows'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
+                        <input  className="sml" value={this.props.metaHeaderrows} id='metaHeaderrows'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
                     </div>
 
                

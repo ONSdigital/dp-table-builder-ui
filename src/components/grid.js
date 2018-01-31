@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import HotTable from 'react-handsontable';
 
 
-class GridComponent extends Component {
+class Grid extends Component {
 
   constructor(props) {
     super(props);
@@ -93,6 +93,7 @@ class GridComponent extends Component {
         root="hot"
         stretchH="all"
         renderAllRows="true"
+        renderAllColumns="true"
         height="350"
         data={this.props.handsontableData}
         contextMenu={true}
@@ -110,4 +111,4 @@ class GridComponent extends Component {
   }
 }
 
-export default GridComponent;
+export default Grid;

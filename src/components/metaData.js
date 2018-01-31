@@ -26,7 +26,7 @@ class MetaData extends Component {
               
                     <div className="block">
                         <label>Title:</label>
-                        <input value={this.props.metaTitle} id='metaTitle' onChange={this.getMetaContent} />
+                        <input  value={this.props.metaTitle} id='metaTitle' onChange={this.getMetaContent} />
                     </div>
                     <div className="block">
                         <label >Subtitle:</label>

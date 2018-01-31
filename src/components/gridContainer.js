@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-import GridComponent from './grid';
-import MetaDataComponent from './metaData';
+import Grid from './grid';
+import MetaData from './metaData';
 
 import FileSaver from 'file-saver'
 
@@ -13,8 +13,6 @@ const renderPrefix = 'http://localhost:23100/render/';
 const ignore_first_row = true;
 const ignore_first_column = true;
 const ignore_column_width = "50px"
-
-//var holdUserData=[];
 
 class GridContainer extends Component {
 
@@ -374,7 +372,7 @@ class GridContainer extends Component {
     if (this.state.view === 'handsontable') {
       return (
         <div className="gridContainer">
-          <MetaDataComponent
+          <MetaData
             // setMetaDataCallbk={this.setMetaData.bind(this)}
             setMetaData={this.setMetaDataCallbk}
             metaTitle={this.state.metaTitle}
@@ -386,7 +384,7 @@ class GridContainer extends Component {
             metaHeaderrows={this.state.metaHeaderrows}
             metaSizeunits={this.state.metaSizeunits}
           />
-          <GridComponent
+          <Grid
             handsontableData={this.state.handsontableData}
             view={this.view}
             previewPostData={this.previewPostData}
@@ -423,7 +421,7 @@ class GridContainer extends Component {
 
     if (this.state.view === 'preview') {
       return (
-        <div className="previewContainer">
+        <div id="previewContainer" className="previewContainer">
           <h1>preview</h1>
           <div className="previewhtml" dangerouslySetInnerHTML={{ __html: this.state.previewHtml }}></div>
           <br />

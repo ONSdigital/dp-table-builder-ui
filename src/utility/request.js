@@ -15,22 +15,22 @@
  * @param {object} body - JSON of the request body (if it's an applicable HTTP method)
  * @param {function} onRetry - Runs whenever the request is going to be retried. Added for use in unit tests, so that we can run our mocked timeOuts (or else the async test breaks)
  * @param {boolean} callerHandles401 - Flag to decide whether caller or global handler is to handle 401 responses 
- * 
+ * @param {string} responseFormat - should response be JSON or Blob  - required for table-builder  for xls preview download
  * @returns {Promise} which returns the response body in JSON format
  */
 
-export default function request(method, URI, willRetry = true, onRetry, body, callerHandles401) {
+export default function request(method, URI, willRetry = true, onRetry, body, callerHandles401,responseFormat) {
     const baseInterval = 50;
     let interval = baseInterval;
     const maxRetries = 5;
     let retryCount = 0;
 
     return new Promise(function(resolve, reject) {
-        tryFetch(resolve, reject, URI, willRetry, body);
+        tryFetch(resolve, reject, URI, willRetry, body,responseFormat);
     });
 
 
-    function tryFetch(resolve, reject, URI, willRetry, body) {
+    function tryFetch(resolve, reject, URI, willRetry, body,responseFormat) {
         const UID = '123'
         const logEventPayload = {
             method: method,
@@ -60,7 +60,11 @@ export default function request(method, URI, willRetry = true, onRetry, body, ca
            // log.add(eventTypes.requestReceived, logEventPayload);
 
             const responseIsJSON = response.headers.get('content-type').match(/application\/json/);
-
+console.log('setting const to response is json here')
+console.log(response.status);
+console.log(response.ok)
+console.log(URI)
+console.log(responseFormat);
             if (response.status >= 500) {
                // throw new  HttpError(response);
             }
@@ -94,15 +98,24 @@ export default function request(method, URI, willRetry = true, onRetry, body, ca
             logEventPayload.status = 200;
             
             if (!responseIsJSON && method !== "POST" && method !== "PUT") {
-               // log.add(eventTypes.runtimeWarning, `Received request response for method '${method}' that didn't have the 'application/json' header`)
+              
+                // log.add(eventTypes.runtimeWarning, `Received request response for method '${method}' that didn't have the 'application/json' header`)
             }
             
             // We're wrapping this try/catch in an async function because we're using 'await' 
             // which requires being executed inside an async function (which the 'fetch' can't be set as)
             (async () => {
+              
                 try {
-                    const json = await response.json();
-                    resolve(json);
+                    
+                    //table builder allows for xls/ csv previews
+                    let responseType;
+                    if (responseFormat=='blob') {
+                        responseType = await response.blob(); }
+                    else
+                    {   responseType = await response.json(); }
+                 
+                    resolve(responseType);
                 } catch (error) {
                     console.error("Error trying to parse request body as JSON: ", error);
                    // log.add(eventTypes.unexpectedRuntimeError, 'Attempt to parse JSON response from request but unable to. Error message: ' + error);

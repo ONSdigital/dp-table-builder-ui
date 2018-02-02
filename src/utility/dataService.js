@@ -5,7 +5,7 @@ export default class DataService {
    
 
     static tablepostPreview(body) {
-        return http.post('http://localhost:23100/parse/html',body,true,false,'json')
+        return http.post('http://localhost:23300/parse/html',body,true,false,'json')
             .then(response => {
                 return response;
             })
@@ -14,7 +14,7 @@ export default class DataService {
 
 // renders as xls, csv for downloading - responseformat is blob
     static tableRenderFilePreview(body,fileType) {
-        return http.post(`http://localhost:23100/render/${fileType}`,body,true,false,'blob')
+        return http.post(`http://localhost:23300/render/${fileType}`,body,true,false,'blob')
             .then(response => {
                 return response;
             })

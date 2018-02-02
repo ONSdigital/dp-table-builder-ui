@@ -35,12 +35,12 @@ class MetaData extends Component {
 
                     <div className="block">
                         <label >Units:</label>
-                        <input  maxLength="20" value={this.props.metaUnits} id='metaUnits'  onChange={this.getMetaContent} /> <br />
+                        <input  maxLength="300" value={this.props.metaUnits} id='metaUnits'  onChange={this.getMetaContent} /> <br />
                     </div>
 
                     <div className="block">
                         <label >Source:</label>
-                        <input  maxLength="200" value={this.props.metaSource} id='metaSource'  onChange={this.getMetaContent} /> <br />
+                        <input  maxLength="300" value={this.props.metaSource} id='metaSource'  onChange={this.getMetaContent} /> <br />
                     </div>
 
                     <div className="block">
@@ -55,7 +55,9 @@ class MetaData extends Component {
                             <option value="%">percent %</option>
                             <option value="em">css em</option>
 
-                        </select></div>
+                        </select>
+                           
+                            </div>
 
 
                     <div>

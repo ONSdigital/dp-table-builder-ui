@@ -19,18 +19,18 @@
  * @returns {Promise} which returns the response body in JSON format
  */
 
-export default function request(method, URI, willRetry = true, onRetry, body, callerHandles401,responseFormat) {
+export default function request(method, URI, willRetry = true, onRetry, body, callerHandles401, responseFormat) {
     const baseInterval = 50;
     let interval = baseInterval;
     const maxRetries = 5;
     let retryCount = 0;
 
-    return new Promise(function(resolve, reject) {
-        tryFetch(resolve, reject, URI, willRetry, body,responseFormat);
+    return new Promise(function (resolve, reject) {
+        tryFetch(resolve, reject, URI, willRetry, body, responseFormat);
     });
 
 
-    function tryFetch(resolve, reject, URI, willRetry, body,responseFormat) {
+    function tryFetch(resolve, reject, URI, willRetry, body, responseFormat) {
         const UID = '123'
         const logEventPayload = {
             method: method,
@@ -39,7 +39,7 @@ export default function request(method, URI, willRetry = true, onRetry, body, ca
             retryCount,
             URI
         };
-         const fetchConfig = {
+        const fetchConfig = {
             method,
             // credentials: "include",
             header: {
@@ -52,27 +52,23 @@ export default function request(method, URI, willRetry = true, onRetry, body, ca
             fetchConfig.body = JSON.stringify(body || {});
         }
 
-       // log.add(eventTypes.requestSent, {...logEventPayload});
+        // log.add(eventTypes.requestSent, {...logEventPayload});
 
         fetch(URI, fetchConfig).then(response => {
             logEventPayload.status = response.status;
             logEventPayload.message = response.message;
-           // log.add(eventTypes.requestReceived, logEventPayload);
+            // log.add(eventTypes.requestReceived, logEventPayload);
 
             const responseIsJSON = response.headers.get('content-type').match(/application\/json/);
-console.log('setting const to response is json here')
-console.log(response.status);
-console.log(response.ok)
-console.log(URI)
-console.log(responseFormat);
+
             if (response.status >= 500) {
-               // throw new  HttpError(response);
+                // throw new  HttpError(response);
             }
 
             if (response.status === 401) {
 
                 if (callerHandles401) {
-                    reject({status: response.status, message: response.statusText});
+                    reject({ status: response.status, message: response.statusText });
                     return;
                 }
 
@@ -84,41 +80,41 @@ console.log(responseFormat);
                     isDismissable: true,
                     autoDismiss: 20000
                 }
-              //  user.logOut();
-              //  notifications.add(notification);
-                reject({status: response.status, message: response.statusText});
+                //  user.logOut();
+                //  notifications.add(notification);
+                reject({ status: response.status, message: response.statusText });
                 return;
             }
 
             if (!response.ok) {
-                reject({status: response.status, message: response.statusText});
+                reject({ status: response.status, message: response.statusText });
                 return;
             }
 
             logEventPayload.status = 200;
-            
+
             if (!responseIsJSON && method !== "POST" && method !== "PUT") {
-              
+
                 // log.add(eventTypes.runtimeWarning, `Received request response for method '${method}' that didn't have the 'application/json' header`)
             }
-            
+
             // We're wrapping this try/catch in an async function because we're using 'await' 
             // which requires being executed inside an async function (which the 'fetch' can't be set as)
             (async () => {
-              
+
                 try {
-                    
+
                     //table builder allows for xls/ csv previews
                     let responseType;
-                    if (responseFormat=='blob') {
-                        responseType = await response.blob(); }
-                    else
-                    {   responseType = await response.json(); }
-                 
+                    if (responseFormat == 'blob') {
+                        responseType = await response.blob();
+                    }
+                    else { responseType = await response.json(); }
+
                     resolve(responseType);
                 } catch (error) {
-                    console.error("Error trying to parse request body as JSON: ", error);
-                   // log.add(eventTypes.unexpectedRuntimeError, 'Attempt to parse JSON response from request but unable to. Error message: ' + error);
+                    console.error("Error trying to parse request body as " + responseFormat, error);
+                    // log.add(eventTypes.unexpectedRuntimeError, 'Attempt to parse JSON response from request but unable to. Error message: ' + error);
 
                     // We're not necessarily relying on a response with these methods
                     // so we should still resolve the promise, just with no response body
@@ -129,10 +125,10 @@ console.log(responseFormat);
 
                     // We're trying to get data at this point and the body can't be parsed
                     // which means this request is a failure and the promise should be rejected
-                    reject({status: response.status, message: "JSON response body couldn't be parsed"});
+                    reject({ status: response.status, message: "JSON response body couldn't be parsed" });
                 }
             })()
-        }).catch((fetchError = {message: "No error message given"}) => {
+        }).catch((fetchError = { message: "No error message given" }) => {
             logEventPayload.message = fetchError.message;
             //log.add(eventTypes.requestFailed, logEventPayload);
 
@@ -140,7 +136,7 @@ console.log(responseFormat);
 
                 // retry post
                 if (retryCount < maxRetries) {
-                    setTimeout(function() { tryFetch(resolve, reject, URI, willRetry, body) }, interval);
+                    setTimeout(function () { tryFetch(resolve, reject, URI, willRetry, body) }, interval);
                     retryCount++;
                     interval = interval * 2;
                     if (onRetry) {
@@ -151,16 +147,16 @@ console.log(responseFormat);
                     // pass error back to caller when max number of retries is met
                     if (fetchError instanceof TypeError) {
                         // connection failed
-                        reject({status: 'FETCH_ERR', error: fetchError});
-                    } 
+                        reject({ status: 'FETCH_ERR', error: fetchError });
+                    }
                     // else if (fetchError instanceof HttpError) {
                     //     // unexpected response
                     //     reject({status: 'RESPONSE_ERR', error: fetchError})
                     // }
-                    
+
                     else {
                         // unexpected error
-                        reject({status: 'UNEXPECTED_ERR', error: fetchError})
+                        reject({ status: 'UNEXPECTED_ERR', error: fetchError })
                     }
 
                     retryCount = 0;
@@ -173,16 +169,16 @@ console.log(responseFormat);
             // pass error back to caller when max number of retries is met
             if (fetchError instanceof TypeError) {
                 // connection failed
-                reject({status: 'FETCH_ERR', error: fetchError});
-            } 
+                reject({ status: 'FETCH_ERR', error: fetchError });
+            }
             // else if (fetchError instanceof HttpError) {
             //     // unexpected response
             //     reject({status: 'RESPONSE_ERR', error: fetchError})
             // } 
-            
+
             else {
                 // unexpected error
-                reject({status: 'UNEXPECTED_ERR', error: fetchError})
+                reject({ status: 'UNEXPECTED_ERR', error: fetchError })
             }
 
         });

@@ -104,6 +104,7 @@ class Grid extends Component {
         colWidths={this.props.colWidths}
         mergeCells={this.props.mergeCells}
         cell={this.props.cellAlignments}
+       //columns={[{className: "htRight"},{className: "htCenter"}]}
         ref={(c) => { this.tableRef = c; }}
       />
       <div style={emHeightStyle} id="emHeight">m</div>

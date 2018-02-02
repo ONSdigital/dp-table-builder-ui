@@ -28,7 +28,7 @@ class GridContainer extends Component {
     this.state = {
       view: 'handsontable',
       tableJsonOutput: [],
-      handsontableData: [[" "], [" "]],
+      handsontableData: [[""], [""]],
       previewHtml: '',
       parsedData: '',
       rawData: '',
@@ -86,7 +86,8 @@ class GridContainer extends Component {
     console.log('inside rebuild');
     this.setColWidths(this.state.parsedData.render_json);
     this.setMergeCells(this.state.parsedData.render_json.cell_formats);
-    this.setCellAlignments(this.state.parsedData.render_json.cell_formats);
+    //this.setCellAlignments(this.state.parsedData.render_json.cell_formats,this.state.parsedData.render_json.column_formats);
+    this.setCellAlignments(this.state.parsedData.render_json);
     this.changeView('handsontable');
   }
 
@@ -97,8 +98,6 @@ class GridContainer extends Component {
       view: viewType
     })
   }
-
-
 
 
 
@@ -132,17 +131,21 @@ class GridContainer extends Component {
 
   previewGrid(event) {
     console.log('preview grid');
+   // console.log(this.state.tableJsonOutput)
     this.processHandsontableData();
   }
 
 
   updateTableJsonOutput(usertabledata) {
-
     // console.log('in updateTableJson - setState: tableJsonOutput: usertabledata');
     //console.log(usertabledata);
     this.setState({ tableJsonOutput: usertabledata });
   }
 
+
+
+  // Before we post data to prevew parse endpoint 
+  // we add details from meta form
   processHandsontableData() {
     console.log('@@@@pre-process');
 
@@ -229,6 +232,12 @@ class GridContainer extends Component {
           default:
             widthVal = 50;
         }
+
+        // check col alignments
+        if (entry.align!=null) {
+
+//to do
+        }
       }
 
       colWidths.push(Math.round(widthVal));
@@ -238,6 +247,8 @@ class GridContainer extends Component {
     console.log('col widths');
     console.log(this.state.colWidths);
   }
+
+
 
 
 
@@ -253,17 +264,48 @@ class GridContainer extends Component {
   }
 
 
+  //set full column alignment
+  // setColumnAlignment(data) {
+  //   data.column_formats.forEach((entry) => {
 
-  setCellAlignments(cellformats) {
+  //   }
+
+  // }
+
+
+
+
+  setCellAlignments(parsedData) {
     // in  {row: 1, col: 1, align: "Left", vertical_align:"Middle"}
     // out  {row: 1, col: 1, className: "htLeft htMiddle"}
-    let cellAlignments = [];
+
+    const cellformats = parsedData.cell_formats;
+    const colformats = parsedData.cell_formats;
     console.log('in alignment cells');
+    console.log(cellformats)
+
+    let cellAlignments = [];
+   
     cellformats.forEach((entry) => {
       if (entry.hasOwnProperty("align") || entry.hasOwnProperty("vertical_align")) {
         cellAlignments.push({ row: entry.row, col: entry.col, className: this.getMapAlignmentClass(entry) });
       }
     });
+
+
+
+//for entire col alignment we need to iterate over column_formats
+//that was returned from the parser and add cell alignment array per cell for col
+colformats.forEach((entry) => {
+  if (entry.hasOwnProperty("align")) {
+    //foreach row
+    for (let i = 0; i < parsedData.data.length; i++) { 
+      cellAlignments.push({ row: i, col: entry.col, className: this.getMapAlignmentClass(entry) });
+  }
+    
+  }
+});
+
     this.setState({ cellAlignments: cellAlignments });
     console.log('new cellAlignment');
     console.log(this.state.cellAlignments);
@@ -312,22 +354,21 @@ class GridContainer extends Component {
 
 
   postPreviewData(data) {
-    console.log('data in');
+    console.log('data sending to parse endpoint');
     console.log(data);
-
     var p = DataService.tablepostPreview(data)
-    Promise.resolve(p).then((data) => {
+    Promise.resolve(p).then((previewData) => {
       /* do something with the result */
-      console.log('@@@@p resolve', data);
-      data.render_json.current_table_width = data.current_table_width;
-      data.render_json.current_table_height = data.current_table_height;
-      data.render_json.single_em_height = data.single_em_height;
-      data.render_json.cell_size_units = data.cell_size_units;
+      console.log('@@@@p resolve data from parse endpoint');
+      console.log(previewData)
+      previewData.render_json.current_table_width = data.current_table_width;
+      previewData.render_json.current_table_height = data.current_table_height;
+      previewData.render_json.single_em_height = data.single_em_height;
+      previewData.render_json.cell_size_units = data.cell_size_units;
       this.setState({
-        previewHtml: data.preview_html,
-        parsedData: data,
+        previewHtml: previewData.preview_html,
+        parsedData: previewData,
         view: 'preview'
-
       })
     })
       .catch(function (e) {
@@ -339,8 +380,9 @@ class GridContainer extends Component {
 
 
 
-  postRenderData(fileType) {
 
+
+  postRenderData(fileType) {
     var p = DataService.tableRenderFilePreview(this.state.parsedData.render_json,fileType)
     Promise.resolve(p).then((data) => {
       /* do something with the result */
@@ -456,6 +498,7 @@ class GridContainer extends Component {
             {JSON.stringify(this.state.mergeCells)}
             <br /> <br /><h1>Cell:</h1>
             {JSON.stringify(this.state.cellAlignments)}
+            <br/>[{this.state.metaSizeunits}]
           </div>
           <br /> */}
         </div>

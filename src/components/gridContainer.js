@@ -6,9 +6,7 @@ import MetaData from './metaData';
 
 import FileSaver from 'file-saver'
 
-
-const previewURi = 'http://localhost:23100/parse/html';
-const renderPrefix = 'http://localhost:23100/render/';
+const defaultRendererUri = 'http://localhost:23300'
 
 const ignore_first_row = true;
 const ignore_first_column = true;
@@ -24,8 +22,13 @@ class GridContainer extends Component {
   constructor(props) {
     super(props);
 
+    // props.data holds the json used to define the table.
+    // props.onSave holds the function that should be invoked to save the json
+    // props.rendererUri holds the uri of the renderer
+
     this.state = {
       view: 'handsontable',
+      rendererUri: props.rendererUri ? props.rendererUri : defaultRendererUri,
       tableJsonOutput: [],
       handsontableData: [[" "], [" "]],
       previewHtml: '',
@@ -37,6 +40,7 @@ class GridContainer extends Component {
       metaSource: '',
       metaNotes: '',
       metaSizeunits: '',
+      metaKeepHeadersTogether: true,
       metaHeadercols: '',
       metaHeaderrows: '',
       colWidths: [],
@@ -119,8 +123,11 @@ class GridContainer extends Component {
 
 
   saveGrid(event) {
-    console.log(this.state.saveData);
-    console.log('saved');
+    let renderJson = this.state.parsedData.render_json;
+    if (this.props.onSave) {
+      this.props.onSave(renderJson);
+    }
+    console.log('saved ' + renderJson);
   }
 
 
@@ -158,6 +165,7 @@ class GridContainer extends Component {
     data["header_rows"] = parseInt(this.state.metaHeaderrows) || 0
     data["header_cols"] = parseInt(this.state.metaHeadercols) || 0;
     data["cell_size_units"] = this.state.metaSizeunits; // this.state.metaUnits;
+    data["keep_headers_together"] = this.state.metaKeepHeadersTogether; // this.state.metaUnits;
     data["alignment_classes"] = {
       "top": "htTop",
       "middle": "htMiddle",
@@ -313,7 +321,7 @@ class GridContainer extends Component {
   postPreviewData(dta) {
     console.log('dta in');
     console.log(dta)
-    fetch(previewURi, {
+    fetch(this.state.rendererUri + '/parse/html', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -349,7 +357,7 @@ class GridContainer extends Component {
 
   postRenderData(fileType) {
     var renderJson = JSON.stringify(this.state.parsedData.render_json)
-    fetch(renderPrefix + fileType, {
+    fetch(this.state.rendererUri + "/render/" + fileType, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -377,7 +385,7 @@ class GridContainer extends Component {
             setMetaData={this.setMetaDataCallbk}
             metaTitle={this.state.metaTitle}
             metaSubtitle={this.state.metaSubtitle}
-            metaUnits={this.state.metaUnits}
+            metaKeepHeadersTogether={this.state.metaKeepHeadersTogether}
             metaSource={this.state.metaSource}
             metaNotes={this.state.metaNotes}
             metaHeadercols={this.state.metaHeadercols}

@@ -34,11 +34,6 @@ class MetaData extends Component {
                     </div>
 
                     <div className="block">
-                        <label >Units:</label>
-                        <input  maxLength="20" value={this.props.metaUnits} id='metaUnits'  onChange={this.getMetaContent} /> <br />
-                    </div>
-
-                    <div className="block">
                         <label >Source:</label>
                         <input  maxLength="200" value={this.props.metaSource} id='metaSource'  onChange={this.getMetaContent} /> <br />
                     </div>
@@ -55,8 +50,16 @@ class MetaData extends Component {
                             <option value="%">percent %</option>
                             <option value="em">css em</option>
 
-                        </select></div>
+                        </select>
+                    </div>
 
+                    <div>
+                        <label >Auto-size headers :</label>
+                        <select id="metaKeepHeadersTogether" value={this.props.metaKeepHeadersTogether} onChange={this.getMetaContent}>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
 
                     <div>
                         <label >Header Cols:</label>

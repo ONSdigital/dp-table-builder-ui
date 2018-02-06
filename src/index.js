@@ -7,7 +7,7 @@ import  "./assets/scss/main.scss";
 
 ReactDOM.render(
     <div>
-        <GridContainer/>
+        <GridContainer preLoadData="123" />
     </div>
     ,
     document.getElementById('app')

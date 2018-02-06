@@ -45,10 +45,14 @@ class Grid extends Component {
 
 
 
-    shouldComponentUpdate() {
+    shouldComponentUpdate(nextProps, nextState) {
         //nextProps, nextState
-    // console.log(' shouldComponentUpdate in GRID nextProps...');
-        return false;
+        // console.log(' shouldComponentUpdate in GRID nextProps...');
+        //console.log(this.props.handsontableData);
+        //console.log(nextProps.handsontableData);
+        // console.log(nextProps);
+        let dataDiff = this.props.handsontableData == nextProps.handsontableData;
+        if (dataDiff) return false; else return true;
     }
 
 
@@ -92,6 +96,7 @@ class Grid extends Component {
                 height="350"
                 data={this.props.handsontableData}
                 contextMenu={true}
+                // contextMenu = {['row_above', 'row_below','hsep1','col_left','col_right','hsep2', 'remove_row','remove_col','hsep3','undo','redo','hsep4','alignment','hsep5','copy','cut']}
                 colHeaders={true} // this should be the same as ignore_first_row 
                 rowHeaders={true} // this should be the same as ignore_first_column 
                 manualColumnResize={true}

@@ -38,7 +38,7 @@ class GridContainer extends Component {
             previewHtml: '',
             parsedData: '',
             rawData: '',
-            metaTitle: '',
+            metaTitle: 'xx',
             metaSubtitle: '',
             metaUnits: '',
             metaSource: '',
@@ -61,40 +61,61 @@ class GridContainer extends Component {
 
         this.previewGrid = this.previewGrid.bind(this);
         this.rebuildGrid = this.rebuildGrid.bind(this);
+        this.onBackFromPreview = this.onBackFromPreview.bind(this);
         this.saveGrid = this.saveGrid.bind(this);
-        
-        // this.postRenderData = this.postRenderData.bind(this);
+    
     }
 
 
 
-    //shouldComponentUpdate(nextProps, nextState) {
-    // if (nextState.view != this.state.view)
-    //   {
-    //     console.log('TRUE - container component updating')
-    //     return true;}
+    componentDidMount() {
+        const preLoadData = {"title":"this is the title","subtitle":"subtitle","source":"ons","type":"table","type_version":"2","filename":"abc1234","row_formats":[{"row":0,"heading":true}],"column_formats":[{"col":0,"heading":true,"width":"14.94em"},{"col":1,"align":"Center","width":"9.88em"},{"col":2,"width":"9.88em"},{"col":3,"width":"9.88em"}],"cell_formats":[{"row":1,"col":2,"align":"Right"},{"row":2,"col":3,"align":"Center"}],"data":[["","CPIH","CPI","OOH"],["Nov 2007","2.2","2.1","2.6"],["Dec 2007","2.3","2.1","2.8"],["Jan 2008","2.4","2.2","2.8"],["Feb 2008","2.6","2.5","2.8"],["Mar 2008","2.6","2.5","2.7"],["Apr 2008","3.0","3.0","2.8"],["May 2008","3.3","3.3","2.8"],["Jun 2008","3.7","3.8","2.7"],["Jul 2008","4.2","4.4","2.7"],["Aug 2008","4.4","4.7","2.5"],["Sep 2008","4.8","5.2","2.6"],["Oct 2008","4.2","4.5","2.6"]],"footnotes":["a","b","c"],"current_table_width":764,"current_table_height":326,"single_em_height":16,"cell_size_units":"em"};
+        //this.props.preLoadData;
+        console.log('preLoadData');
+        console.log(preLoadData);
+        
+        if (preLoadData) {
+            this.setState({
+                handsontableData: preLoadData.data
+            })
+            this.populateMetaForm(preLoadData);
+            this.rebuildGrid(preLoadData)
+        // this.changeView('editTable');
+        }
+    }
 
-    // else{
-    //   console.log('FALSE - container component NOT  updating')
-    //   return false;
-    // }
-
-    //     return true;
-    // }
 
 
-
-
-
-    rebuildGrid() {
-        console.log('inside rebuild');
-        this.setColWidths(this.state.parsedData.render_json);
-        this.setMergeCells(this.state.parsedData.render_json.cell_formats);
-        this.setCellAlignments(this.state.parsedData.render_json);
+    onBackFromPreview() {
+        console.log(this.state.parsedData.render_json);
+        this.rebuildGrid(this.state.parsedData.render_json);
         this.changeView('editTable');
     }
 
 
+
+    rebuildGrid(rebuildData) {
+        console.log('inside rebuild');
+        console.log(rebuildData);
+        this.setColWidths(rebuildData);
+        this.setMergeCells(rebuildData.cell_formats);
+        this.setCellAlignments(rebuildData);
+    }
+
+
+    populateMetaForm(rebuildData){
+        console.log(rebuildData);
+        this.setState({
+            metaTitle:rebuildData.title,
+            metaSubtitle:rebuildData.subtitle,
+            metaNotes: this.getFootNotes(rebuildData), //rebuildData.footnotes,
+            metaSource:rebuildData.source,
+            metaSizeunits: rebuildData.cell_size_units,
+            metaHeadercols:  this.getHeaderColumnCount(rebuildData) || 0,
+            metaHeaderrows: this.getHeaderRowCount(rebuildData) || 0
+        })
+
+    }
 
     changeView(viewType) {
         this.setState({
@@ -119,7 +140,6 @@ class GridContainer extends Component {
 
 
     saveGrid() {
-       
         let renderJson = this.state.parsedData.render_json;
         if (this.props.onSave) {
             this.props.onSave(renderJson);
@@ -221,9 +241,7 @@ class GridContainer extends Component {
                     break;
                 default:
                     widthVal = 50;
-                }
-
-       
+                }       
             }
 
             colWidths.push(Math.round(widthVal));
@@ -253,7 +271,6 @@ class GridContainer extends Component {
     setCellAlignments(parsedData) {
     // in  {row: 1, col: 1, align: "Left", vertical_align:"Middle"}
     // out  {row: 1, col: 1, className: "htLeft htMiddle"}
-
         const cellformats = parsedData.cell_formats;
         const colformats = parsedData.column_formats;
         console.log('in alignment cells');
@@ -319,6 +336,48 @@ class GridContainer extends Component {
         }
 
         return className.trim();
+    }
+
+
+
+
+
+
+    // extract the HeaderCol num from column_formats json
+    // when loading an existing table
+    getHeaderColumnCount(data) {
+        const colformats = data.column_formats;
+        let colCount=0;
+        colformats.forEach((entry) => {
+            if (entry.hasOwnProperty("heading")) {
+                colCount++;
+            }
+        });
+        return colCount;
+    }
+    
+
+
+    // extract the HeaderRow  num from row_formats json
+    // when loading an existing table
+    getHeaderRowCount(data) {
+        const rowformats = data.row_formats;
+        let rowCount=0;
+        rowformats.forEach((entry) => {
+            if (entry.hasOwnProperty("heading")) {
+                rowCount++;
+            }
+        });
+        return rowCount;
+    }
+
+
+    
+    // extract the Meta notes string from footnotes json
+    // when loading an existing table
+    getFootNotes(data) {
+        return  data.footnotes.toString().replace(",","\n",-1);
+        
     }
 
 
@@ -429,7 +488,8 @@ class GridContainer extends Component {
                     <h1>preview</h1>
                     <div className="previewhtml" dangerouslySetInnerHTML={{ __html: this.state.previewHtml }}></div>
                     <br />
-                    <button onClick={this.rebuildGrid}>back</button> &nbsp;
+                    {/* <button onClick={this.rebuildGrid}>back</button> &nbsp; */}
+                    <button onClick={this.onBackFromPreview}>back</button> &nbsp;
                     <button onClick={() => this.postRenderData('xlsx')}>preview xlsx</button> &nbsp;
                     <button onClick={() => this.postRenderData('csv')}>preview csv</button> &nbsp;
                 </div>

@@ -6,11 +6,11 @@ import  "./assets/scss/main.scss";
 //import css from './styles/style.css';
 
 ReactDOM.render(
-  <div>
-   <GridContainer/>
-  </div>
-  ,
-  document.getElementById('app')
+    <div>
+        <GridContainer/>
+    </div>
+    ,
+    document.getElementById('app')
 );
 
 

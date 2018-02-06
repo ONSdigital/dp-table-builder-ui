@@ -1,24 +1,39 @@
 import http from './http';
 
+const responseJson = 'json';
+const responseBlob = 'blob';
+
 export default class DataService {
 
    
+   
 
-    static tablepostPreview(body) {
-        return http.post('http://localhost:23300/parse/html',body,true,false,'json')
+    static tablepostPreview(body,uri) {
+        return http.post(uri,body,true,false,responseJson)
             .then(response => {
                 return response;
             })
     }
 
 
-// renders as xls, csv for downloading - responseformat is blob
-    static tableRenderFilePreview(body,fileType) {
-        return http.post(`http://localhost:23300/render/${fileType}`,body,true,false,'blob')
+    // renders as xls, csv for downloading - responseformat is blob
+    static tableRenderFilePreview(body,uri,fileType) {
+        return http.post(uri,body,true,false,responseBlob)
             .then(response => {
                 return response;
             })
     }
+
+
+
+    // Save table TO DO - not implemented here
+    static tableSaveFilePreview(body,fileType) {
+        return http.post(`http://localhost:23300/save/${fileType}`,body,true,false,responseJson)
+            .then(response => {
+                return response;
+            })
+    }
+
 
 
 

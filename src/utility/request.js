@@ -3,6 +3,7 @@
 // import uuid from 'uuid/v4';
 // import user from '../api-clients/user';
 // import notifications from '../notifications';
+import "babel-polyfill"
 
 
 

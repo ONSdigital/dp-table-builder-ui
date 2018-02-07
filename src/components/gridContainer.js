@@ -71,8 +71,9 @@ class GridContainer extends Component {
     componentDidMount() {
         console.log('preLoadData');
         console.log(this.props.data);
-       
-        if (this.props.data)
+        console.log(Object.keys(this.props.data).length === 0)
+
+        if (!(Object.keys(this.props.data).length === 0))
         {
             this.setState({
                 handsontableData: this.props.data.data

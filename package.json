@@ -6,8 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server",
     "clean": "rimraf dist",
-    "build": "babel src -d dist && npm run scsscopy",
-    "scsscopy": "copyfiles -u 1 src/**/*.scss dist",
+    "build": "babel src -d dist && npm run csscopy",
+    "csscopy": "copyfiles -u 1 src/**/*.css dist",
     "production": "cross-env npm run clean && webpack --config webpack.production.config.js --progress --profile --colors",
     "lint": "eslint ./src/**/**.js",
     "test": "jest",

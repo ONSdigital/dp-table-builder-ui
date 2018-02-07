@@ -7,17 +7,17 @@ import GridContainer from '../../src/components/gridContainer';
 configure({ adapter: new Adapter() });
 
 describe('App Component', () => {
-  let wrapper;
+    let wrapper;
 
-  beforeEach(() => {
-    wrapper = shallow(<GridContainer />);
-  });
+    beforeEach(() => {
+        wrapper = shallow(<GridContainer />);
+    });
 
-  it('GridContainer should exist', () => {
-    expect(wrapper).toBeTruthy();
-  });
+    it('GridContainer should exist', () => {
+        expect(wrapper).toBeTruthy();
+    });
   
-  // it('should have one heading', () => {
-  //   expect(wrapper.find('#previewContainer').type()).toEqual('div');
-  // });
+    // it('should have one heading', () => {
+    //   expect(wrapper.find('#previewContainer').type()).toEqual('div');
+    // });
 });

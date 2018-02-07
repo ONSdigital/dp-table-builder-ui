@@ -6,6 +6,6 @@ import GridContainer from '../../dist';
 
 ReactDOM.render(
 <div id="example-component">
-<GridContainer />
+<GridContainer data={{}} />
 </div>, 
 document.getElementById('app'));

@@ -148,9 +148,11 @@ class GridContainer extends Component {
     }
 
 
-
-    loadGrid() {
-        console.log('load');
+    cancel() {
+        console.log('cancel');
+        if (this.props.onCancel) {
+            this.props.onCancel();
+        }
     }
 
 
@@ -460,8 +462,8 @@ class GridContainer extends Component {
                     />&nbsp;<br />
                     <div className="statusBar">
                         <div className="statusBtnsGroup">
-                            <button onClick={this.saveGrid} >save</button>&nbsp;
-                            <button onClick={this.loadGrid}>load</button> &nbsp;
+                            <button className="btn--positive" onClick={this.saveGrid} >save</button>&nbsp;
+                            <button onClick={this.cancel}>cancel</button> &nbsp;
                             <button onClick={this.previewGrid}>preview html</button> &nbsp;
                         </div><div className="rowColStatus">Row:&nbsp;{this.state.colrowStatus.row}&nbsp;&nbsp;Col:&nbsp;{this.state.colrowStatus.col}</div>
                     </div>

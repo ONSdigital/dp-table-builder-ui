@@ -1,8 +1,9 @@
 {
   "name": "dp-table-builder-ui",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Handsontable grid implentation",
   "main": "dist/index.js",
+  "style": "dist/assets/GridContainer.css",
   "scripts": {
     "start": "webpack-dev-server",
     "clean": "rimraf dist",

@@ -18,12 +18,11 @@
 }
 
 .gridContainer .grid {
-  border: 1px dotted #fcc;
+  border: 1px #ccc dotted;
   width: 62%;
-  max-height: 350px;
+  height: 97%;
   margin-left: 20px;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
   display: inline-block;
   margin: 5px;
 }
@@ -33,9 +32,12 @@
   width: 35%;
   vertical-align: top;
   display: inline-block;
-  margin-right: 5px;
-  margin-bottom: 4px;
+  margin: 5px;
   padding-left: 5px;
+}
+
+.gridContainer .metaContainer .select-wrap {
+  display:inline-block;
 }
   
 .gridContainer .metaContainer input {

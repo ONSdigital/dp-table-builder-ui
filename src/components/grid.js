@@ -93,7 +93,6 @@ class Grid extends Component {
                 stretchH="all"
                 renderAllRows="true"
                 renderAllColumns="true"
-                height="350"
                 data={this.props.handsontableData}
                 contextMenu={true}
                 // contextMenu = {['row_above', 'row_below','hsep1','col_left','col_right','hsep2', 'remove_row','remove_col','hsep3','undo','redo','hsep4','alignment','hsep5','copy','cut']}

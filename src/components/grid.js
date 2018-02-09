@@ -67,10 +67,11 @@ class Grid extends Component {
         const table = Hot.table;
         // console.log(table);
         let tableJsonOutput = [];
-        tableJsonOutput = { 'filename': 'abc1234' };
+        tableJsonOutput = {};
         tableJsonOutput['table_html'] = table.outerHTML;
-        tableJsonOutput['current_table_width'] = table.clientWidth
-        tableJsonOutput['current_table_height'] = table.clientHeight
+        // as the handsontable headers aren't part of the output, subtract their size from the table size
+        tableJsonOutput['current_table_width'] = table.clientWidth - table.getElementsByTagName("tr")[0].getElementsByTagName("th")[0].clientWidth
+        tableJsonOutput['current_table_height'] = table.clientHeight - table.getElementsByTagName("tr")[0].clientHeight
         tableJsonOutput['single_em_height'] = document.getElementById("emHeight").clientHeight;
         this.props.updateUserTableData(tableJsonOutput);
     }

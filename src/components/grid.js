@@ -91,7 +91,6 @@ class Grid extends Component {
         return <div className='grid'>
             <HotTable
                 root="hot"
-                stretchH="all"
                 renderAllRows="true"
                 renderAllColumns="true"
                 data={this.props.handsontableData}

@@ -35,7 +35,7 @@ class GridContainer extends Component {
             view: 'editTable',
             rendererUri: props.rendererUri ? props.rendererUri : defaultRendererUri,
             tableJsonOutput: [],
-            handsontableData: [[""], [""]],
+            handsontableData: [["","",""], ["","",""]],
             previewHtml: '',
             parsedData: '',
             rawData: '',

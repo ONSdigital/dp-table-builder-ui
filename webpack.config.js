@@ -13,7 +13,7 @@ const config = {
         'webpack-dev-server/client?http://localhost:8080',
         'webpack/hot/only-dev-server',
         './index.js',
-        './assets/scss/main.scss',
+        './assets/GridContainer.css',
     ],
 
     output: {

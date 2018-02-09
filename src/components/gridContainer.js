@@ -27,6 +27,7 @@ class GridContainer extends Component {
 
         // props.data holds the json used to define the table.
         // props.onSave holds the function that should be invoked to save the json
+        // props.onCancel holds the function that should be invoked if the cancel button is clicked
         // props.rendererUri holds the uri of the renderer
 
 
@@ -47,7 +48,7 @@ class GridContainer extends Component {
             metaHeadercols: '',
             metaHeaderrows: '',
             colWidths: [],
-            mergeCells: true,
+            mergeCells: [],
             cellAlignments: [],
             colrowStatus: {}
         };
@@ -146,7 +147,6 @@ class GridContainer extends Component {
         }
         console.log('saved ' + renderJson);
     }
-
 
     cancel() {
         console.log('cancel');

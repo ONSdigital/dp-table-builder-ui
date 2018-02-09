@@ -64,6 +64,7 @@ class GridContainer extends Component {
         this.rebuildGrid = this.rebuildGrid.bind(this);
         this.onBackFromPreview = this.onBackFromPreview.bind(this);
         this.saveGrid = this.saveGrid.bind(this);
+        this.cancel = this.cancel.bind(this);
     
     }
 

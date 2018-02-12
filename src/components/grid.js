@@ -62,7 +62,7 @@ class Grid extends Component {
 
 
     updateDataDump() {
-    //console.log('update event is fired');
+        //console.log('updateDataDump');
         const Hot = this.tableRef.hotInstance;
         const table = Hot.table;
         // console.log(table);

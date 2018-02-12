@@ -13,7 +13,6 @@ const defaultRendererUri = 'http://localhost:23300';
 
 const ignore_first_row = true;
 const ignore_first_column = true;
-const ignore_column_width = "50px"
 
 class GridContainer extends Component {
 
@@ -186,7 +185,6 @@ class GridContainer extends Component {
         data["units"] = this.state.metaUnits;
         data["ignore_first_row"] = ignore_first_row;
         data["ignore_first_column"] = ignore_first_column;
-        data["column_width_to_ignore"] = ignore_column_width;
         data["header_rows"] = parseInt(this.state.metaHeaderrows) || 0
         data["header_cols"] = parseInt(this.state.metaHeadercols) || 0;
         data["cell_size_units"] = this.state.metaSizeunits; 
@@ -234,23 +232,24 @@ class GridContainer extends Component {
         console.log('data in setColwidths');
         console.log(data);
         let colWidths = [];
-        data.column_formats.forEach((entry) => {
-            let widthVal = 0;
-            if (entry.width != null) {
-                switch (data.cell_size_units) {
-                case "em":
-                    widthVal = parseFloat(entry.width.replace('em', '')) * data.single_em_height || 0;
-                    break;
-                case "%":
-                    widthVal = (parseFloat(entry.width.replace('%', '')) / 100.0) * data.current_table_width || 0;
-                    break;
-                default:
-                    widthVal = 50;
-                }       
-            }
-
-            colWidths.push(Math.round(widthVal));
-        });
+        let emUnits = false;
+        switch (data.cell_size_units) {
+            case "em":
+                emUnits = true;
+                // deliberately falling through to next case
+            case "%":
+                data.column_formats.forEach((entry) => {
+                    let widthVal = 50;
+                    if (entry.width != null) {
+                        if (emUnits) {
+                            widthVal = parseFloat(entry.width.replace('em', '')) * data.single_em_height || 0;
+                        } else {
+                            widthVal = (parseFloat(entry.width.replace('%', '')) / 100.0) * data.current_table_width || 0;
+                        }
+                    }
+                    colWidths.push(Math.round(widthVal));
+                });
+        }
 
         this.setState({ colWidths: colWidths });
         console.log('col widths');

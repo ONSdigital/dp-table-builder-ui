@@ -18,18 +18,36 @@ class Grid extends Component {
         let Hot = this.tableRef.hotInstance;
         Hot.updateSettings({
             afterChange: () => {
-                this.updateDataDump()
+                this.props.setDataDirty(true);
+                this.updateDataDump();
+               
             },
             afterColumnMove: () => {
+                this.props.setDataDirty(true);
                 this.updateDataDump()
             },
             afterRemoveRow: () => {
+                this.props.setDataDirty(true);
                 this.updateDataDump()
             },
             afterRemoveCol: () => {
+                this.props.setDataDirty(true);
                 this.updateDataDump()
             },
-            modifyColWidth: () => {
+            afterCreateCol: () => {
+                this.props.setDataDirty(true);
+                this.updateDataDump()
+            },
+            afterCreateRow: () => {
+                this.props.setDataDirty(true);
+                this.updateDataDump()
+            },
+            beforeCellAlignment: () => {
+                this.props.setDataDirty(true);
+                this.updateDataDump()
+            },
+            afterColumnResize: () => {
+                this.props.setDataDirty(true);
                 this.updateDataDump()
             },
             afterOnCellMouseOver: (event, coords, tableData) => {
@@ -117,7 +135,8 @@ Grid.propTypes = {
     handsontableData:PropTypes.array,
     tableData:PropTypes.array,
     cellMove:PropTypes.func,
-    updateUserTableData:PropTypes.func
+    updateUserTableData:PropTypes.func,
+    setDataDirty:PropTypes.func
 }
 
 export default Grid;

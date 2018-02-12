@@ -14,7 +14,9 @@
 
 .gridContainer .previewhtml {
 
-  border: 3px #f00 dashed;
+  /* border: 5px #0fc dashed; */
+  overflow-y: auto;
+  height:95%;
 }
 
 .gridContainer .grid {
@@ -94,3 +96,6 @@
   padding-right: 10px;
 }
 
+
+.hideBtn {display: none;}
+.showBtn {display: inline}

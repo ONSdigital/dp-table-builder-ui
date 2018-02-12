@@ -1,16 +1,20 @@
 import React from 'react';
-import { shallow, configure } from 'enzyme';
+import { shallow, configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
+
 import MetaData from '../../src/components/metaData';
+import GridContainer from '../../src/components/gridContainer';
 
 configure({ adapter: new Adapter() });
 
 describe('Meta Data form', () => {
     
     let wrapper
+    let gridcontainerWrapper
     beforeEach(() => {
         wrapper = shallow(<MetaData />);
+        gridcontainerWrapper = shallow(<GridContainer />);
     });
 
 
@@ -49,6 +53,22 @@ describe('Meta Data form', () => {
 
     it('should have one meta Header Rows', () => {
         expect(wrapper.find('#metaHeaderrows').type()).toEqual('input');
+    });
+
+
+
+
+    it('Meta Data sets state in parent', () => {
+       
+        const form =  wrapper.find('#metaTitle');
+        // form.props().onChange({target: {
+        //     name: 'myName',
+        //     value: 'myValue'
+        // }});
+    
+        // wrapper.props().setMetaData({metaTitle:'xx'});      
+        // then
+        expect(gridcontainerWrapper.state('metaTitle')).toEqual('xx');
     });
 
 

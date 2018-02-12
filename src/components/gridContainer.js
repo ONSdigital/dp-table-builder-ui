@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from './grid';
 import MetaData from './metaData';
+import Previewer from './previewer';
 
 import FileSaver from 'file-saver';
 import DataService from '../utility/dataService';
@@ -49,7 +51,9 @@ class GridContainer extends Component {
             colWidths: [],
             mergeCells: [],
             cellAlignments: [],
-            colrowStatus: {}
+            colrowStatus: {},
+            isDirty:false,
+            statusMessage:''
         };
 
         //callback handlers
@@ -58,6 +62,7 @@ class GridContainer extends Component {
         this.previewPostData = this.processHandsontableData.bind(this);
         this.updateUserTableData = this.updateTableJsonOutput.bind(this);
         this.cellMove = this.cellMove.bind(this);
+        this.setDataDirty = this.setDataDirty.bind(this);
 
         this.previewGrid = this.previewGrid.bind(this);
         this.rebuildGrid = this.rebuildGrid.bind(this);
@@ -70,19 +75,22 @@ class GridContainer extends Component {
 
 
     componentDidMount() {
-        console.log('preLoadData');
-        console.log(this.props.data);
-        console.log(Object.keys(this.props.data).length === 0)
+        // console.log('preLoadData');
+        // console.log(this.props.data);
+       
 
-        if (!(Object.keys(this.props.data).length === 0))
-        {
-            this.setState({
-                handsontableData: this.props.data.data
-            })
-            this.populateMetaForm(this.props.data);
-            this.rebuildGrid(this.props.data)
-        // this.changeView('editTable');
-        }}
+        if (this.props.data) {
+            if (!(Object.keys(this.props.data).length === 0))
+            {
+                this.setState({
+                    handsontableData: this.props.data.data
+                })
+                this.populateMetaForm(this.props.data);
+                this.rebuildGrid(this.props.data)
+                // this.changeView('editTable');
+            }
+        }
+    }
 
 
 
@@ -135,18 +143,41 @@ class GridContainer extends Component {
     }
 
 
+
+    setDataDirty(dirtyFlag) {
+        console.log("dirtyFlag set to " + dirtyFlag)
+        this.setState({isDirty:dirtyFlag,statusMessage:'dirty:' +dirtyFlag});
+       
+    }
+
+
     setMetaData(metaObject) {
+        console.log("in set meta")
+        console.log(metaObject)
         this.setState(metaObject);
+        this.setDataDirty(true);
     }
 
 
 
     saveGrid() {
+
+        console.log('saveGrid() called')
+        if (this.state.isDirty) {
+            this.processHandsontableData();
+
+        }
+
         let renderJson = this.state.parsedData.render_json;
         if (this.props.onSave) {
             this.props.onSave(renderJson);
         }
+
+        console.log(renderJson);
+        this.setState({statusMessage:"saved"})
         console.log('saved ' + renderJson);
+        console.log('saveGrid end ****')
+       
     }
 
     cancel() {
@@ -161,6 +192,7 @@ class GridContainer extends Component {
         console.log('preview grid');
         // console.log(this.state.tableJsonOutput)
         this.processHandsontableData();
+        this.changeView('preview');
     }
 
 
@@ -169,6 +201,7 @@ class GridContainer extends Component {
     // console.log('in updateTableJson - setState: tableJsonOutput: usertabledata');
     // console.log(usertabledata);
         this.setState({ tableJsonOutput: usertabledata });
+        //  this.setDataDirty(true);
     }
 
 
@@ -231,8 +264,8 @@ class GridContainer extends Component {
 
     // set Column widths render_json > handsontable
     setColWidths(data) {
-        console.log('data in setColwidths');
-        console.log(data);
+        //console.log('data in setColwidths');
+        //console.log(data);
         let colWidths = [];
         let emUnits = false;
         switch (data.cell_size_units) {
@@ -254,8 +287,8 @@ class GridContainer extends Component {
         }
 
         this.setState({ colWidths: colWidths });
-        console.log('col widths');
-        console.log(this.state.colWidths);
+        // console.log('col widths');
+        // console.log(this.state.colWidths);
     }
 
 
@@ -269,6 +302,7 @@ class GridContainer extends Component {
             return obj.hasOwnProperty("rowspan");
         });
         this.setState({ mergeCells: mergeArr });
+        console.log('this.state.mergeCells');
         console.log(this.state.mergeCells);
     }
 
@@ -383,7 +417,7 @@ class GridContainer extends Component {
     // extract the Meta notes string from footnotes json
     // when loading an existing table
     getFootNotes(data) {
-        return  data.footnotes.toString().replace(",","\n",-1);
+        return  data.toString().replace(",","\n",-1);
         
     }
 
@@ -405,13 +439,14 @@ class GridContainer extends Component {
             previewData.render_json.cell_size_units = data.cell_size_units;
             this.setState({
                 previewHtml: previewData.preview_html,
-                parsedData: previewData,
-                view: 'preview'
+                parsedData: previewData
             })
+            this.setDataDirty(false);
         })
-            .catch(function (e) {
+            .catch( (e)=> {
                 /* error :( */
                 console.log('@@@@p error',e);
+                this.setState({statusMessage: e.error.message})
 
             })
     }
@@ -437,9 +472,12 @@ class GridContainer extends Component {
 
 
     render() {
+       
+        let viewComponent= null;
+
         if (this.state.view === 'editTable') {
-            return (
-                <div className="gridContainer">
+            viewComponent = 
+                <div>
                     <MetaData
                         // setMetaDataCallbk={this.setMetaData.bind(this)}
                         setMetaData={this.setMetaDataCallbk}
@@ -461,51 +499,44 @@ class GridContainer extends Component {
                         mergeCells={this.state.mergeCells}
                         cellAlignments={this.state.cellAlignments}
                         cellMove={this.cellMove}
+                        setDataDirty={this.setDataDirty}
                     />&nbsp;<br />
-                    <div className="statusBar">
-                        <div className="statusBtnsGroup">
-                            <button className="btn--positive" onClick={this.saveGrid} >save</button>&nbsp;
-                            <button onClick={this.cancel}>cancel</button> &nbsp;
-                            <button onClick={this.previewGrid}>preview html</button> &nbsp;
-                        </div><div className="rowColStatus">Row:&nbsp;{this.state.colrowStatus.row}&nbsp;&nbsp;Col:&nbsp;{this.state.colrowStatus.col}</div>
-                    </div>
-
-                    {/* <h1>Current table for parsing</h1>
-          <div id="debug">{JSON.stringify(this.state.tableJsonOutput)}</div>
-          <h1>this is rebuild test {this.state.colWidths}</h1>
-          <div>
-            {JSON.stringify(this.state.parsedData.render_json)}
-            <br /> <br /><h1>colWidths</h1>
-            {JSON.stringify(this.state.colWidths)}
-            <br /> <br /><h1>MergeCells</h1>
-            {JSON.stringify(this.state.mergeCells)}
-            <br /> <br /><h1>Cell:</h1>
-            {JSON.stringify(this.state.cellAlignments)}
-            <br/>[{this.state.metaSizeunits}]
-          </div>
-          <br /> */}
-                </div>
-            )
+                </div>;
+        }
+            
+        else {
+            viewComponent = <Previewer previewHtml={this.state.previewHtml} />
         }
 
-        if (this.state.view === 'preview') {
-            return (
-                <div id="previewContainer" className="previewContainer">
-                    <h1>preview</h1>
-                    <div className="previewhtml" dangerouslySetInnerHTML={{ __html: this.state.previewHtml }}></div>
-                    <br />
-                    {/* <button onClick={this.rebuildGrid}>back</button> &nbsp; */}
-                    <button onClick={this.onBackFromPreview}>back</button> &nbsp;
-                    <button onClick={() => this.postRenderData('xlsx')}>preview xlsx</button> &nbsp;
-                    <button onClick={() => this.postRenderData('csv')}>preview csv</button> &nbsp;
+
+        return (
+            <div className="gridContainer">
+                {viewComponent}
+                <div className="statusBar">
+                    <div className="statusBtnsGroup">
+                        <button onClick={this.saveGrid} >save</button>&nbsp;
+                        <button onClick={this.loadGrid}>load</button> &nbsp;
+                        <button className={this.state.view === 'editTable'? "showBtn": "hideBtn"} onClick={this.previewGrid}>preview html</button> &nbsp;
+                        <button className={this.state.view === 'editTable'? "hideBtn": "showBtn"} onClick={this.onBackFromPreview}>back</button> &nbsp;
+                        <button className={this.state.view === 'editTable'? "hideBtn": "showBtn"} onClick={() => this.postRenderData('xlsx')}>preview xlsx</button> &nbsp;
+                        <button className={this.state.view === 'editTable'? "hideBtn": "showBtn"} onClick={() => this.postRenderData('csv')}>preview csv</button> &nbsp;
+                      
+                    </div><div className="rowColStatus">{this.state.statusMessage}&nbsp;&nbsp;Row:&nbsp;{this.state.colrowStatus.row}&nbsp;&nbsp;Col:&nbsp;{this.state.colrowStatus.col}</div>
                 </div>
-            )
-        }
+            </div>
+        );
+           
 
     }
 
 }
 
+
+GridContainer.propTypes = {
+    data: PropTypes.object,
+    onSave: PropTypes.func,
+    rendererUri:PropTypes.string
+}
 
 export default GridContainer;
 

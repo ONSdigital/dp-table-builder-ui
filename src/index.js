@@ -1,7 +1,5 @@
-import React  from 'react';
-import ReactDOM from 'react-dom';
 import GridContainer from './components/gridContainer';
 
-import  "./assets/GridContainer.css";
+import  "./assets/scss/main.scss";
 
-module.exports = GridContainer;
+export default GridContainer;

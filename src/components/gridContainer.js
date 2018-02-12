@@ -188,7 +188,7 @@ class GridContainer extends Component {
         data["header_rows"] = parseInt(this.state.metaHeaderrows) || 0
         data["header_cols"] = parseInt(this.state.metaHeadercols) || 0;
         data["cell_size_units"] = this.state.metaSizeunits; 
-        data["keep_headers_together"] = this.state.metaKeepHeadersTogether; 
+        data["keep_headers_together"] = (this.state.metaKeepHeadersTogether == 'true'); 
         data["alignment_classes"] = {
             "top": "htTop",
             "middle": "htMiddle",

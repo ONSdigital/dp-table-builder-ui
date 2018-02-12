@@ -95,7 +95,7 @@ class Grid extends Component {
                 renderAllColumns="true"
                 data={this.props.handsontableData}
                 contextMenu={true}
-                // contextMenu = {['row_above', 'row_below','hsep1','col_left','col_right','hsep2', 'remove_row','remove_col','hsep3','undo','redo','hsep4','alignment','hsep5','copy','cut']}
+                contextMenu = {['row_above', 'row_below','---------','col_left','col_right','---------', 'remove_row','remove_col','---------','undo','redo','---------','alignment','---------','copy','cut']}
                 colHeaders={true} // this should be the same as ignore_first_row 
                 rowHeaders={true} // this should be the same as ignore_first_column 
                 manualColumnResize={true}

@@ -9,7 +9,7 @@ const config = {
 
   entry: [
     './main.js',
-    './assets/GridContainer.css',
+    './assets/scss/main.scss',
   ],
 
   context: resolve(__dirname, 'app'),

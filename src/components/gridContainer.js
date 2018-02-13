@@ -29,6 +29,7 @@ class GridContainer extends Component {
         // props.data holds the json used to define the table.
         // props.onSave holds the function that should be invoked to save the json
         // props.onCancel holds the function that should be invoked if the cancel button is clicked
+        // props.onError holds the function that should be invoked in response to an error - pass in a message for the user
         // props.rendererUri holds the uri of the renderer
 
 
@@ -69,6 +70,7 @@ class GridContainer extends Component {
         this.onBackFromPreview = this.onBackFromPreview.bind(this);
         this.saveGrid = this.saveGrid.bind(this);
         this.cancel = this.cancel.bind(this);
+        this.onError = this.onError.bind(this);
     
     }
 
@@ -186,6 +188,7 @@ class GridContainer extends Component {
             this.props.onCancel();
         }
     }
+
 
 
     previewGrid() {
@@ -446,8 +449,7 @@ class GridContainer extends Component {
             .catch( (e)=> {
                 /* error :( */
                 console.log('@@@@p error',e);
-                this.setState({statusMessage: e.error.message})
-
+                this.onError("No response from renderer service. Unable to display preview or save content.");
             })
     }
 
@@ -465,7 +467,7 @@ class GridContainer extends Component {
             .catch(function (e) {
                 /* error :( */
                 console.log('@@@@p error',e);
-
+                this.onError("No response from renderer service. Unable to display preview.");
             })
     }
 
@@ -529,6 +531,14 @@ class GridContainer extends Component {
 
     }
 
+    // handle errors by invoking an onError method passed in to the constructor
+    onError(message) {
+        if (this.props.onError) {
+            this.props.onError(message);
+        } else {
+            this.setState({statusMessage: message})
+        }
+    }
 }
 
 

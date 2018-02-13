@@ -1,6 +1,7 @@
 {
   "name": "dp-table-builder-ui",
   "version": "1.0.9",
+  "homepage": "https://www.npmjs.com/package/dp-table-builder-ui",
   "description": "Handsontable grid implentation",
   "main": "dist/index.js",
   "scripts": {

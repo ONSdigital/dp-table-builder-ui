@@ -13,6 +13,7 @@ inputs:
 
 outputs:
   - name: build
+  - name: version
 
 run:
   path: dp-table-builder-ui/ci/scripts/build.sh

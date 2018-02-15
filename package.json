@@ -1,6 +1,6 @@
 {
   "name": "dp-table-builder-ui",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Handsontable grid implentation",
   "main": "dist/index.js",
   "scripts": {
@@ -13,7 +13,6 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "coverage": "jest --coverage",
-    "postinstall": "npm run build",
     "precommit": "cross-env npm run lint && npm test",
     "prepush": "cross-env npm run lint && npm test",
     "prepare": "npm run build"

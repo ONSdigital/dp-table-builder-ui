@@ -17,54 +17,43 @@ class Grid extends Component {
     }
 
     componentDidMount() {
-        this.updateDataDump();
         let Hot = this.tableRef.hotInstance;
         Hot.updateSettings({
             afterChange: () => {
-                this.props.setDataDirty(true);
-                this.updateDataDump();
-               
+                this.contentHasChanged();              
             },
             afterColumnMove: () => {
-                this.props.setDataDirty(true);
-                this.updateDataDump()
+                this.contentHasChanged();              
             },
             afterRemoveRow: () => {
-                this.props.setDataDirty(true);
-                this.updateDataDump()
+                this.contentHasChanged();              
             },
             afterRemoveCol: () => {
-                this.props.setDataDirty(true);
-                this.updateDataDump()
+                this.contentHasChanged();              
             },
             afterCreateCol: () => {
-                this.props.setDataDirty(true);
-                this.updateDataDump()
+                this.contentHasChanged();              
             },
             afterCreateRow: () => {
-                this.props.setDataDirty(true);
-                this.updateDataDump()
+                this.contentHasChanged();              
             },
             beforeCellAlignment: () => {
-                this.props.setDataDirty(true);
-                this.updateDataDump()
+                this.contentHasChanged();              
             },
             afterColumnResize: () => {
-                this.props.setDataDirty(true);
-                this.updateDataDump()
+                this.contentHasChanged();              
             },
             afterOnCellMouseOver: (event, coords, tableData) => {
-                //console.log(tableData);
                 this.updateCellMouseOver(coords);
             },
 
         });
     }
 
-
-
-
-
+    // contentHasChanged marks the state as dirty
+    contentHasChanged() {
+        this.props.setDataDirty(true);
+    }
 
     shouldComponentUpdate(nextProps, nextState) {
         //nextProps, nextState
@@ -82,11 +71,10 @@ class Grid extends Component {
     }
 
 
-    updateDataDump() {
-        //console.log('updateDataDump');
+    // getTableMarkup returns the outerHTML of the table, along with details of the size of the table
+    getTableMarkup() {
         const Hot = this.tableRef.hotInstance;
         const table = Hot.table;
-        // console.log(table);
         let tableJsonOutput = {};
         tableJsonOutput['table_html'] = table.outerHTML;
         // as the handsontable headers aren't part of the output, subtract their size from the table size
@@ -94,6 +82,7 @@ class Grid extends Component {
         tableJsonOutput['current_table_height'] = table.clientHeight - table.getElementsByTagName("tr")[0].clientHeight
         tableJsonOutput['single_em_height'] = document.getElementById("emHeight").clientHeight;
         this.props.updateUserTableData(tableJsonOutput); 
+        return tableJsonOutput;
     }
 
 

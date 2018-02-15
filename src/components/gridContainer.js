@@ -77,20 +77,13 @@ class GridContainer extends Component {
 
 
     componentDidMount() {
-        // console.log('preLoadData');
-        // console.log(this.props.data);
-       
-
-        if (this.props.data) {
-            if (!(Object.keys(this.props.data).length === 0))
-            {
-                this.setState({
-                    handsontableData: this.props.data.data
-                })
-                this.populateMetaForm(this.props.data);
-                this.rebuildGrid(this.props.data)
-                // this.changeView('editTable');
-            }
+        if (this.props.data && !(Object.keys(this.props.data).length === 0))
+        {
+            this.setState({
+                handsontableData: this.props.data.data
+            })
+            this.populateMetaForm(this.props.data);
+            this.rebuildGrid(this.props.data)
         }
     }
 
@@ -150,9 +143,7 @@ class GridContainer extends Component {
         console.log("dirtyFlag set to " + dirtyFlag)
         this.setState({isDirty:dirtyFlag});
         this.setState({statusMessage:''});
-        this.setState({statusMessage:'dirty:' +dirtyFlag}); // comment out to debug
-        
-       
+        //this.setState({statusMessage:'dirty:' +dirtyFlag}); // uncomment to debug
     }
 
 
@@ -228,8 +219,8 @@ class GridContainer extends Component {
     // Before we post data to prevew parse endpoint 
     // we add details from meta form
     processHandsontableData() {
-        console.log('@@@@pre-process');
-        let data = this.state.tableJsonOutput;
+        console.log('@@@@pre-process');      
+        let data = this.grid.getTableMarkup();
 
         data["filename"] = this.state.filename;
         data["footnotes"] = this.addFootNotes();
@@ -527,6 +518,7 @@ class GridContainer extends Component {
                         cellAlignments={this.state.cellAlignments}
                         cellMove={this.cellMove}
                         setDataDirty={this.setDataDirty}
+                        ref={instance => { this.grid = instance; }}
                     />&nbsp;<br />
                 </div>;
         }

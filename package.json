@@ -1,6 +1,6 @@
 {
   "name": "dp-table-builder-ui",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Handsontable grid implentation",
   "main": "dist/index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "collectCoverageFrom": [
       "app/**/*.{js,jsx,ts,tsx}"
     ],
+    "modulePathIgnorePatterns":["test-app"],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/config/jest/assetsTransformer.js",
       "\\.(css|less)$": "<rootDir>/config/jest/assetsTransformer.js"

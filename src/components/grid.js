@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HotTable from 'react-handsontable';
+import Handsontable from 'handsontable';
+
 
 
 class Grid extends Component {
     constructor(props) {
         super(props);
+        Handsontable.renderers.registerRenderer('firstRowRenderer',this.firstRowRenderer);
     }
 
 
@@ -14,7 +17,7 @@ class Grid extends Component {
     }
 
     componentDidMount() {
-
+        this.updateDataDump();
         let Hot = this.tableRef.hotInstance;
         Hot.updateSettings({
             afterChange: () => {
@@ -84,20 +87,18 @@ class Grid extends Component {
         const Hot = this.tableRef.hotInstance;
         const table = Hot.table;
         // console.log(table);
-        let tableJsonOutput = [];
-        tableJsonOutput = {};
+        let tableJsonOutput = {};
         tableJsonOutput['table_html'] = table.outerHTML;
         // as the handsontable headers aren't part of the output, subtract their size from the table size
         tableJsonOutput['current_table_width'] = table.clientWidth - table.getElementsByTagName("tr")[0].getElementsByTagName("th")[0].clientWidth
         tableJsonOutput['current_table_height'] = table.clientHeight - table.getElementsByTagName("tr")[0].clientHeight
         tableJsonOutput['single_em_height'] = document.getElementById("emHeight").clientHeight;
-        this.props.updateUserTableData(tableJsonOutput);
+        this.props.updateUserTableData(tableJsonOutput); 
     }
 
 
     updateCellMouseOver(coords) {
         this.props.cellMove(coords);
-
     }
 
 

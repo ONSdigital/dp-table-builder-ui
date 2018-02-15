@@ -62,15 +62,16 @@ class Grid extends Component {
 
 
     updateDataDump() {
-    //console.log('update event is fired');
+        //console.log('updateDataDump');
         const Hot = this.tableRef.hotInstance;
         const table = Hot.table;
         // console.log(table);
         let tableJsonOutput = [];
-        tableJsonOutput = { 'filename': 'abc1234' };
+        tableJsonOutput = {};
         tableJsonOutput['table_html'] = table.outerHTML;
-        tableJsonOutput['current_table_width'] = table.clientWidth
-        tableJsonOutput['current_table_height'] = table.clientHeight
+        // as the handsontable headers aren't part of the output, subtract their size from the table size
+        tableJsonOutput['current_table_width'] = table.clientWidth - table.getElementsByTagName("tr")[0].getElementsByTagName("th")[0].clientWidth
+        tableJsonOutput['current_table_height'] = table.clientHeight - table.getElementsByTagName("tr")[0].clientHeight
         tableJsonOutput['single_em_height'] = document.getElementById("emHeight").clientHeight;
         this.props.updateUserTableData(tableJsonOutput);
     }
@@ -90,13 +91,10 @@ class Grid extends Component {
         return <div className='grid'>
             <HotTable
                 root="hot"
-                stretchH="all"
                 renderAllRows="true"
                 renderAllColumns="true"
-                height="350"
                 data={this.props.handsontableData}
-                contextMenu={true}
-                // contextMenu = {['row_above', 'row_below','hsep1','col_left','col_right','hsep2', 'remove_row','remove_col','hsep3','undo','redo','hsep4','alignment','hsep5','copy','cut']}
+                contextMenu = {['row_above', 'row_below','---------','col_left','col_right','---------', 'remove_row','remove_col','---------','undo','redo','---------','alignment','---------','mergeCells','---------','copy','cut']}
                 colHeaders={true} // this should be the same as ignore_first_row 
                 rowHeaders={true} // this should be the same as ignore_first_column 
                 manualColumnResize={true}

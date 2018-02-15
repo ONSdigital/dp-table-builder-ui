@@ -13,7 +13,6 @@ const defaultRendererUri = 'http://localhost:23300';
 
 const ignore_first_row = true;
 const ignore_first_column = true;
-const ignore_column_width = "50px"
 
 class GridContainer extends Component {
 
@@ -27,6 +26,7 @@ class GridContainer extends Component {
 
         // props.data holds the json used to define the table.
         // props.onSave holds the function that should be invoked to save the json
+        // props.onCancel holds the function that should be invoked if the cancel button is clicked
         // props.rendererUri holds the uri of the renderer
 
 
@@ -34,7 +34,7 @@ class GridContainer extends Component {
             view: 'editTable',
             rendererUri: props.rendererUri ? props.rendererUri : defaultRendererUri,
             tableJsonOutput: [],
-            handsontableData: [[""], [""]],
+            handsontableData: [["","",""], ["","",""]],
             previewHtml: '',
             parsedData: '',
             rawData: '',
@@ -47,7 +47,7 @@ class GridContainer extends Component {
             metaHeadercols: '',
             metaHeaderrows: '',
             colWidths: [],
-            mergeCells: true,
+            mergeCells: [],
             cellAlignments: [],
             colrowStatus: {}
         };
@@ -63,6 +63,7 @@ class GridContainer extends Component {
         this.rebuildGrid = this.rebuildGrid.bind(this);
         this.onBackFromPreview = this.onBackFromPreview.bind(this);
         this.saveGrid = this.saveGrid.bind(this);
+        this.cancel = this.cancel.bind(this);
     
     }
 
@@ -112,7 +113,8 @@ class GridContainer extends Component {
             metaSource:rebuildData.source,
             metaSizeunits: rebuildData.cell_size_units,
             metaHeadercols:  this.getHeaderColumnCount(rebuildData) || 0,
-            metaHeaderrows: this.getHeaderRowCount(rebuildData) || 0
+            metaHeaderrows: this.getHeaderRowCount(rebuildData) || 0,
+            filename: rebuildData.filename
         })
 
     }
@@ -147,10 +149,11 @@ class GridContainer extends Component {
         console.log('saved ' + renderJson);
     }
 
-
-
-    loadGrid() {
-        console.log('load');
+    cancel() {
+        console.log('cancel');
+        if (this.props.onCancel) {
+            this.props.onCancel();
+        }
     }
 
 
@@ -176,6 +179,7 @@ class GridContainer extends Component {
         console.log('@@@@pre-process');
         let data = this.state.tableJsonOutput;
 
+        data["filename"] = this.state.filename;
         data["footnotes"] = this.addFootNotes();
         data["title"] = this.state.metaTitle;
         data["subtitle"] = this.state.metaSubtitle;
@@ -183,11 +187,10 @@ class GridContainer extends Component {
         data["units"] = this.state.metaUnits;
         data["ignore_first_row"] = ignore_first_row;
         data["ignore_first_column"] = ignore_first_column;
-        data["column_width_to_ignore"] = ignore_column_width;
         data["header_rows"] = parseInt(this.state.metaHeaderrows) || 0
         data["header_cols"] = parseInt(this.state.metaHeadercols) || 0;
         data["cell_size_units"] = this.state.metaSizeunits; 
-        data["keep_headers_together"] = this.state.metaKeepHeadersTogether; 
+        data["keep_headers_together"] = (this.state.metaKeepHeadersTogether == 'true'); 
         data["alignment_classes"] = {
             "top": "htTop",
             "middle": "htMiddle",
@@ -231,23 +234,24 @@ class GridContainer extends Component {
         console.log('data in setColwidths');
         console.log(data);
         let colWidths = [];
-        data.column_formats.forEach((entry) => {
-            let widthVal = 0;
-            if (entry.width != null) {
-                switch (data.cell_size_units) {
-                case "em":
-                    widthVal = parseFloat(entry.width.replace('em', '')) * data.single_em_height || 0;
-                    break;
-                case "%":
-                    widthVal = (parseFloat(entry.width.replace('%', '')) / 100.0) * data.current_table_width || 0;
-                    break;
-                default:
-                    widthVal = 50;
-                }       
-            }
-
-            colWidths.push(Math.round(widthVal));
-        });
+        let emUnits = false;
+        switch (data.cell_size_units) {
+            case "em":
+                emUnits = true;
+                // deliberately falling through to next case
+            case "%":
+                data.column_formats.forEach((entry) => {
+                    let widthVal = 50;
+                    if (entry.width != null) {
+                        if (emUnits) {
+                            widthVal = parseFloat(entry.width.replace('em', '')) * data.single_em_height || 0;
+                        } else {
+                            widthVal = (parseFloat(entry.width.replace('%', '')) / 100.0) * data.current_table_width || 0;
+                        }
+                    }
+                    colWidths.push(Math.round(widthVal));
+                });
+        }
 
         this.setState({ colWidths: colWidths });
         console.log('col widths');
@@ -460,8 +464,8 @@ class GridContainer extends Component {
                     />&nbsp;<br />
                     <div className="statusBar">
                         <div className="statusBtnsGroup">
-                            <button onClick={this.saveGrid} >save</button>&nbsp;
-                            <button onClick={this.loadGrid}>load</button> &nbsp;
+                            <button className="btn--positive" onClick={this.saveGrid} >save</button>&nbsp;
+                            <button onClick={this.cancel}>cancel</button> &nbsp;
                             <button onClick={this.previewGrid}>preview html</button> &nbsp;
                         </div><div className="rowColStatus">Row:&nbsp;{this.state.colrowStatus.row}&nbsp;&nbsp;Col:&nbsp;{this.state.colrowStatus.col}</div>
                     </div>

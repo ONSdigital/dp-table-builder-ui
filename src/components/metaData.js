@@ -25,58 +25,56 @@ class MetaData extends Component {
     render() {
         return (
             <div className='metaContainer'>
-                <h2>Meta Data</h2>
               
-                <div className="block">
+                <div className="title">
                     <label>Title:</label>
                     <input   value={this.props.metaTitle} id='metaTitle' onChange={this.getMetaContent} />
                 </div>
-                <div className="block">
+                <div className="subtitle">
                     <label >Subtitle:</label>
                     <input   value={this.props.metaSubtitle} id='metaSubtitle' onChange={this.getMetaContent} /> <br />
                 </div>
 
-                {/* <div className="block">
-                    <label >Units:</label>
-                    <input  value={this.props.metaUnits} id='metaUnits'  onChange={this.getMetaContent} /> <br />
-                </div> */}
-
-                <div className="block">
+                <div className="source">
                     <label >Source:</label>
                     <input  value={this.props.metaSource} id='metaSource'  onChange={this.getMetaContent} /> <br />
                 </div>
 
-                <div className="block">
+                <div className="notes">
                     <label >Notes:</label>
                     <textarea value={this.props.metaNotes} id='metaNotes'  onChange={this.getMetaContent} /> <br />
                 </div>
 
-                <div>
+                <div className="sizeUnits">
                     <label >Cell size :</label>
-                    <select id="metaSizeunits" value={this.props.metaSizeunits} onChange={this.getMetaContent}>
-                        <option value="auto">auto</option>
-                        <option value="%">percent %</option>
-                        <option value="em">css em</option>
-
-                    </select>
+                    <div className="select-wrap">
+                        <select id="metaSizeunits" value={this.props.metaSizeunits} onChange={this.getMetaContent}>
+                            <option value="auto">auto</option>
+                            <option value="%">percent %</option>
+                            <option value="em">css em</option>
+                        </select>
+                    </div>
                            
                 </div>
 
-                <div>
+                <div className="keepHeadersTogether">
                     <label >Auto-size headers :</label>
-                    <select id="metaKeepHeadersTogether" value={this.props.metaKeepHeadersTogether} onChange={this.getMetaContent}>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
+                    <div className="select-wrap">
+                        <select id="metaKeepHeadersTogether" value={this.props.metaKeepHeadersTogether} onChange={this.getMetaContent}>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div>
-                    <label >Header Cols:</label>
-                    <input   className="sml" value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
-                </div>
-                <div>
+                <div className="rows">
                     <label >Header Rows:</label>
                     <input  className="sml" value={this.props.metaHeaderrows} id='metaHeaderrows'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
+                </div>
+
+                <div className="cols">
+                    <label >Header Cols:</label>
+                    <input   className="sml" value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
                 </div>
 
                

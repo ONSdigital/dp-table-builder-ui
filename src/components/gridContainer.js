@@ -113,7 +113,8 @@ class GridContainer extends Component {
             metaSource:rebuildData.source,
             metaSizeunits: rebuildData.cell_size_units,
             metaHeadercols:  this.getHeaderColumnCount(rebuildData) || 0,
-            metaHeaderrows: this.getHeaderRowCount(rebuildData) || 0
+            metaHeaderrows: this.getHeaderRowCount(rebuildData) || 0,
+            filename: rebuildData.filename
         })
 
     }
@@ -178,6 +179,7 @@ class GridContainer extends Component {
         console.log('@@@@pre-process');
         let data = this.state.tableJsonOutput;
 
+        data["filename"] = this.state.filename;
         data["footnotes"] = this.addFootNotes();
         data["title"] = this.state.metaTitle;
         data["subtitle"] = this.state.metaSubtitle;

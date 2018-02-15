@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HotTable from 'react-handsontable';
+import Handsontable from 'handsontable';
+
 
 
 class Grid extends Component {
     constructor(props) {
         super(props);
+        Handsontable.renderers.registerRenderer('firstRowRenderer',this.firstRowRenderer);
     }
 
 
@@ -14,22 +17,40 @@ class Grid extends Component {
     }
 
     componentDidMount() {
-
+        this.updateDataDump();
         let Hot = this.tableRef.hotInstance;
         Hot.updateSettings({
             afterChange: () => {
-                this.updateDataDump()
+                this.props.setDataDirty(true);
+                this.updateDataDump();
+               
             },
             afterColumnMove: () => {
+                this.props.setDataDirty(true);
                 this.updateDataDump()
             },
             afterRemoveRow: () => {
+                this.props.setDataDirty(true);
                 this.updateDataDump()
             },
             afterRemoveCol: () => {
+                this.props.setDataDirty(true);
                 this.updateDataDump()
             },
-            modifyColWidth: () => {
+            afterCreateCol: () => {
+                this.props.setDataDirty(true);
+                this.updateDataDump()
+            },
+            afterCreateRow: () => {
+                this.props.setDataDirty(true);
+                this.updateDataDump()
+            },
+            beforeCellAlignment: () => {
+                this.props.setDataDirty(true);
+                this.updateDataDump()
+            },
+            afterColumnResize: () => {
+                this.props.setDataDirty(true);
                 this.updateDataDump()
             },
             afterOnCellMouseOver: (event, coords, tableData) => {
@@ -66,20 +87,18 @@ class Grid extends Component {
         const Hot = this.tableRef.hotInstance;
         const table = Hot.table;
         // console.log(table);
-        let tableJsonOutput = [];
-        tableJsonOutput = {};
+        let tableJsonOutput = {};
         tableJsonOutput['table_html'] = table.outerHTML;
         // as the handsontable headers aren't part of the output, subtract their size from the table size
         tableJsonOutput['current_table_width'] = table.clientWidth - table.getElementsByTagName("tr")[0].getElementsByTagName("th")[0].clientWidth
         tableJsonOutput['current_table_height'] = table.clientHeight - table.getElementsByTagName("tr")[0].clientHeight
         tableJsonOutput['single_em_height'] = document.getElementById("emHeight").clientHeight;
-        this.props.updateUserTableData(tableJsonOutput);
+        this.props.updateUserTableData(tableJsonOutput); 
     }
 
 
     updateCellMouseOver(coords) {
         this.props.cellMove(coords);
-
     }
 
 
@@ -117,7 +136,8 @@ Grid.propTypes = {
     handsontableData:PropTypes.array,
     tableData:PropTypes.array,
     cellMove:PropTypes.func,
-    updateUserTableData:PropTypes.func
+    updateUserTableData:PropTypes.func,
+    setDataDirty:PropTypes.func
 }
 
 export default Grid;

@@ -18,6 +18,7 @@ class MetaData extends Component {
         const val = event.target.value
         var obj = {}
         obj[key] = val;
+        obj["isDirty"]=true;
         console.log(obj);
         this.props.setMetaData(obj);
     }

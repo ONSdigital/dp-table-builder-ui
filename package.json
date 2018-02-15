@@ -1,6 +1,6 @@
 {
   "name": "dp-table-builder-ui",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "homepage": "https://www.npmjs.com/package/dp-table-builder-ui",
   "description": "Handsontable grid implentation",
   "main": "dist/index.js",
@@ -14,7 +14,6 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "coverage": "jest --coverage",
-    "postinstall": "npm run build",
     "precommit": "cross-env npm run lint && npm test",
     "prepush": "cross-env npm run lint && npm test",
     "prepare": "npm run build"
@@ -29,6 +28,7 @@
     "collectCoverageFrom": [
       "app/**/*.{js,jsx,ts,tsx}"
     ],
+    "modulePathIgnorePatterns":["test-app"],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/config/jest/assetsTransformer.js",
       "\\.(css|less)$": "<rootDir>/config/jest/assetsTransformer.js"

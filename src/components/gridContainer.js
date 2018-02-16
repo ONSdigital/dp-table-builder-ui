@@ -273,14 +273,10 @@ class GridContainer extends Component {
 
     // set Column widths render_json > handsontable
     setColWidths(data) {
-        //console.log('data in setColwidths');
-        //console.log(data);
         let colWidths = [];
-        let emUnits = false;
+        const emUnits = data.cell_size_units == "em";
         switch (data.cell_size_units) {
         case "em":
-            emUnits = true;
-            // deliberately falling through to next case
         case "%":
             data.column_formats.forEach((entry) => {
                 let widthVal = 50;
@@ -293,11 +289,14 @@ class GridContainer extends Component {
                 }
                 colWidths.push(Math.round(widthVal));
             });
+            break;
+        default:
+            if (data.grid_column_widths) {
+                colWidths = colWidths.concat(data.grid_column_widths);
+            }
         }
 
         this.setState({ colWidths: colWidths });
-        // console.log('col widths');
-        // console.log(this.state.colWidths);
     }
 
 
@@ -446,6 +445,7 @@ class GridContainer extends Component {
                 previewData.render_json.current_table_height = data.current_table_height;
                 previewData.render_json.single_em_height = data.single_em_height;
                 previewData.render_json.cell_size_units = data.cell_size_units;
+                previewData.render_json.grid_column_widths = data.grid_column_widths;
                 this.setState({
                     previewHtml: previewData.preview_html,
                     parsedData: previewData

@@ -7,11 +7,6 @@
     margin-top: 50px;
   }
   
-.gridContainer .previewContainer {
-  max-width: 1100px;
-  margin: auto;
-}
-
 .gridContainer .previewhtml {
 
   /* border: 5px #0fc dashed; */
@@ -97,6 +92,10 @@
 
 .hideBtn {display: none;}
 .showBtn {display: inline}
+
+.gridContainer .previewhtml {
+  overflow: auto;
+}
 
 .previewhtml .figure .align-right {
   text-align: right

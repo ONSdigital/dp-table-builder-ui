@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HotTable from 'react-handsontable';
 import Handsontable from 'handsontable';
+import { inspect } from 'util';
 
 
 
@@ -13,7 +14,7 @@ class Grid extends Component {
 
 
     componentWillMount() {
-        console.log('did mount');
+        console.log('will mount');
     }
 
     componentDidMount() {
@@ -56,20 +57,23 @@ class Grid extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        //nextProps, nextState
-        // console.log(' shouldComponentUpdate in GRID nextProps...');
-        //console.log(this.props.handsontableData);
-        //console.log(nextProps.handsontableData);
-        // console.log(nextProps);
+        
         let dataDiff = this.props.handsontableData == nextProps.handsontableData;
-        if (dataDiff) return false; else return true;
+        let rtnval =false;
+        if (dataDiff) rtnval = false ; else rtnval=true; 
+        if (this.props.formHide!=nextProps.formHide) rtnval=true;
+        // console.log('should grid component update:' + rtnval)
+        return rtnval;
     }
 
 
     componentWillUpdate() {
-    //return false;
     }
 
+    componentDidUpdate(prevProps,prevState){
+        // re-render hot after expand/collapse of meta
+        if (this.props.formHide!=prevProps.formHide) this.callHotRender();
+    }
 
     // getTableMarkup returns the outerHTML of the table, along with details of the size of the table
     getTableMarkup() {
@@ -96,11 +100,18 @@ class Grid extends Component {
 
 
 
+    // to help render when conditionally styling in grid for header/ cols 
+    callHotRender(){
+        console.log('call hotrender')
+        const Hot = this.tableRef.hotInstance;
+        Hot.render();
+    }
 
     render() {
-
+        let classes="grid";
+        if (this.props.formHide==true) classes+=" gridExpandFull"; else classes+=" gridExpandNormal"
         const emHeightStyle = { visibility: "hidden", display: 'inline-block', fontSize: '1em', margin: 0, padding: 0, height: 'auto', lineHeight: 1, border: 0 };
-        return <div className='grid'>
+        return <div className={classes}>
             <HotTable
                 root="hot"
                 renderAllRows="true"
@@ -115,6 +126,26 @@ class Grid extends Component {
                 mergeCells={this.props.mergeCells}
                 cell={this.props.cellAlignments}
                 ref={(c) => { this.tableRef = c; }}
+                cells= { (row, col, prop)=> {
+                    const cellProperties = {};
+                    const rowHeader=this.props.showGridHeaderRows || -1 
+                    const colHeader=this.props.showGridHeaderCols || -1 
+                   
+                    if ((col <= colHeader-1) || (row <= rowHeader-1))  {
+                        cellProperties.renderer =  function(instance, td, row, col, prop, value, cellProperties) {
+                            Handsontable.renderers.TextRenderer.apply(this, arguments);
+                            td.style.fontWeight = 'bold';         
+                        }
+                    }
+                    else  {
+                        cellProperties.renderer =  function(instance, td, row, col, prop, value, cellProperties) {
+                            Handsontable.renderers.TextRenderer.apply(this, arguments);
+                            td.style.fontWeight = 'normal';                
+                        }
+                    }
+
+                    return cellProperties;
+                }}
             />
             <div style={emHeightStyle} id="emHeight">m</div>
         </div>;

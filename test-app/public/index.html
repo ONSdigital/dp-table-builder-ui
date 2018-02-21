@@ -22,7 +22,6 @@
 
 .gridContainer .grid {
   border: 1px dotted #fcc;
-  width: 62%;
   height: 300px;
   margin-left: 20px;
   overflow: hidden;
@@ -30,35 +29,100 @@
   margin: 5px;
 }
 
-.gridContainer .metaContainer {
+.gridExpandFull {
+  width:95%;
+}
+
+.gridExpandNormal {
+  width:60%;
+}
+
+.gridContainer div  .metaContainer {
   border: 1px #ccc dotted;
-  width: 35%;
   vertical-align: top;
   display: inline-block;
+  height:320px;
+  margin:10px;
+}
+
+#tbMetaForm {
+  border: 0 #000 solid;
+  width: 300px;
+  vertical-align: top;
   margin-right: 5px;
   margin-bottom: 4px;
   padding-left: 5px;
+  margin:10px;
 }
+
+
+#tbMetaForm.hide {
+  display: none;
+}
+
+#tbMetaForm.show {
+  display: inline-block;
+}
+
+
+
+
+#tbNotesContainer {
+  border: 0 #000 solid;
+  width: 318px;
+  vertical-align: top;
+  margin-right: 5px;
+  margin-bottom: 4px;
+  padding-left: 5px;
+  margin:1px;
+}
+
+
+#tbNotesContainer.hide { display:none;}
+#tbNotesContainer.show { display:inline-block;}
   
-.gridContainer .metaContainer input {
+#tbNotesContainer textarea {
+  width: 300px;
+  height: 280px;
+
+}
+
+.metaContainer  .expandCollapse {
+   /* border: 1px #000 solid; */
+  width:10px;
+  vertical-align: middle;
+  display: inline-block;
+ padding:1px;
+  margin-top:150px;
+ 
+}
+
+
+.expandCollapse a {
+    color: #ccc;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#tbMetaForm input {
   width: 220px;
 
 }
 
-.gridContainer .metaContainer input.sml {
+#tbMetaForm input.sml {
   width: 70px;
 }
 
-.gridContainer .metaContainer textarea {
+#tbMetaForm textarea {
   width: 220px;
   height: 60px;
 }
 
-.gridContainer .metaContainer div {
+#tbMetaForm {
   margin-bottom: 10px;
 }
 
-.gridContainer .metaContainer .select-wrap {
+#tbMetaForm .select-wrap {
   display: inline-block;
 }
 
@@ -97,6 +161,7 @@
   padding-top: 5px;
   padding-right: 10px;
 }
+
 
 .hideBtn {display: none;}
 .showBtn {display: inline}

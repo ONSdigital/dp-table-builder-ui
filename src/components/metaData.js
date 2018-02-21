@@ -25,11 +25,8 @@ class MetaData extends Component {
     }
 
 
-    onExpandNotes(v) {
-        //this.setState({formHide:!this.state.formHide})
-        console.log('expand Notes clicked', v);
+    onExpandNotes() {
         this.setState({expandNotes:!this.state.expandNotes});
-        console.log(this.state.expandNotes);
     }
 
 
@@ -120,11 +117,13 @@ MetaData.propTypes = {
     metaUnits: PropTypes.string,
     metaSource: PropTypes.string,
     metaSizeunits: PropTypes.string,
-    metaHeadercols: PropTypes.string,
-    metaHeaderrows: PropTypes.string,
+    metaHeadercols: PropTypes.number,
+    metaHeaderrows: PropTypes.number,
     metaNotes: PropTypes.string,
     setMetaData:PropTypes.func,
-    metaKeepHeadersTogether: PropTypes.string
+    metaKeepHeadersTogether: PropTypes.string,
+    setMetaDataHide:PropTypes.func,
+    formHide:PropTypes.bool
    
 };
 

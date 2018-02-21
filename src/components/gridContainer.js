@@ -47,8 +47,8 @@ class GridContainer extends Component {
             metaSource: '',
             metaNotes: '',
             metaSizeunits: '',
-            metaHeadercols: '',
-            metaHeaderrows: '',
+            metaHeadercols: 0,
+            metaHeaderrows: 0,
             colWidths: [],
             mergeCells: [],
             cellAlignments: [],
@@ -73,7 +73,7 @@ class GridContainer extends Component {
         this.saveGrid = this.saveGrid.bind(this);
         this.cancel = this.cancel.bind(this);
         this.onError = this.onError.bind(this);    
-        this.onRefresh = this.onRefresh.bind(this);  
+        // this.onRefresh = this.onRefresh.bind(this);  
     }
 
 
@@ -161,14 +161,9 @@ class GridContainer extends Component {
 
     setMetaDataHide() {
         this.setState({metaFormHide:!this.state.metaFormHide})
-        //this.grid.callHotRender();
-        // if (this.state.metaFormHide===false)  this.grid.callHotRender(); // bug fix re-render hottable on expan
-        console.log('meta hide called in gridcontainer: ' + this.state.metaFormHide)
-
     }
    
     saveGrid() {
-
         console.log('saveGrid() called')
         console.log(this.state.isDirty)
         if (this.state.isDirty) {
@@ -502,10 +497,10 @@ class GridContainer extends Component {
     }
 
 
-    onRefresh() {
-        console.log('manual refresh');
-        this.grid.callHotRender();
-    }
+    // onRefresh() {
+    //     console.log('manual refresh');
+    //     this.grid.callHotRender();
+    // }
     
     render() {
        
@@ -564,15 +559,12 @@ class GridContainer extends Component {
                         <button className={this.state.view === 'editTable'? "hideBtn": "showBtn"} onClick={this.onBackFromPreview}>back</button> &nbsp;
                         <button className={this.state.view === 'editTable'? "hideBtn": "showBtn"} onClick={() => this.postRenderData('xlsx')}>preview xlsx</button> &nbsp;
                         <button className={this.state.view === 'editTable'? "hideBtn": "showBtn"} onClick={() => this.postRenderData('csv')}>preview csv</button> &nbsp;
-                        <button onClick={this.onRefresh}>call Hot.render()</button> &nbsp;
-                    </div><div className="rowColStatus">{this.state.metaFormHide.toString()}{this.state.statusMessage}&nbsp;&nbsp;Row:&nbsp;{this.state.colrowStatus.row}&nbsp;&nbsp;Col:&nbsp;{this.state.colrowStatus.col}</div>
+                    </div><div className="rowColStatus">{this.state.statusMessage}&nbsp;&nbsp;Row:&nbsp;{this.state.colrowStatus.row}&nbsp;&nbsp;Col:&nbsp;{this.state.colrowStatus.col}</div>
                 </div>
             </div>
         );
            
-
     }
-
 
 }
 

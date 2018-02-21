@@ -9,7 +9,7 @@ import { inspect } from 'util';
 class Grid extends Component {
     constructor(props) {
         super(props);
-        Handsontable.renderers.registerRenderer('firstRowRenderer',this.firstRowRenderer);
+        //Handsontable.renderers.registerRenderer('firstRowRenderer',this.firstRowRenderer);
     }
 
 
@@ -64,7 +64,7 @@ class Grid extends Component {
     componentWillUpdate() {
     }
 
-    componentDidUpdate(prevProps,prevState){
+    componentDidUpdate(prevProps){
         // re-render hot after expand/collapse of meta
         if (this.props.formHide!=prevProps.formHide) this.callHotRender();
     }
@@ -125,19 +125,19 @@ class Grid extends Component {
                 mergeCells={this.props.mergeCells}
                 cell={this.props.cellAlignments}
                 ref={(c) => { this.tableRef = c; }}
-                cells= { (row, col, prop)=> {
+                cells= { (row, col)=> {
                     const cellProperties = {};
                     const rowHeader=this.props.showGridHeaderRows || -1 
                     const colHeader=this.props.showGridHeaderCols || -1 
                    
                     if ((col <= colHeader-1) || (row <= rowHeader-1))  {
-                        cellProperties.renderer =  function(instance, td, row, col, prop, value, cellProperties) {
+                        cellProperties.renderer =  function(instance, td) {
                             Handsontable.renderers.TextRenderer.apply(this, arguments);
                             td.style.fontWeight = 'bold';         
                         }
                     }
                     else  {
-                        cellProperties.renderer =  function(instance, td, row, col, prop, value, cellProperties) {
+                        cellProperties.renderer =  function(instance, td) {
                             Handsontable.renderers.TextRenderer.apply(this, arguments);
                             td.style.fontWeight = 'normal';                
                         }
@@ -160,7 +160,10 @@ Grid.propTypes = {
     tableData:PropTypes.array,
     cellMove:PropTypes.func,
     updateUserTableData:PropTypes.func,
-    setDataDirty:PropTypes.func
+    setDataDirty:PropTypes.func,
+    formHide:PropTypes.bool,
+    showGridHeaderCols:PropTypes.number,
+    showGridHeaderRows:PropTypes.number
 }
 
 export default Grid;

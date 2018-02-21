@@ -96,12 +96,12 @@ class MetaData extends Component {
 
                     <div className="rows">
                         <label ># of Header Rows:</label>
-                        <input  className="sml" value={this.props.metaHeaderrows} id='metaHeaderrows'  type="number" min="0" max="999"  onBlur={this.props.refreshGrid} onChange={this.getMetaContent} /> <br />
+                        <input  className="sml" value={this.props.metaHeaderrows} id='metaHeaderrows'  type="number" min="0" max="999"  onChange={this.getMetaContent} /> <br />
                     </div>
 
                     <div className="cols">
                         <label ># of Header Cols:</label>
-                        <input   className="sml" value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onBlur={this.props.refreshGrid} onChange={this.getMetaContent} /> <br />
+                        <input   className="sml" value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
                     </div>
 
                   

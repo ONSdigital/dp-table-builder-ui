@@ -51,19 +51,13 @@ class Grid extends Component {
         });
     }
 
-    // contentHasChanged marks the state as dirty
-    contentHasChanged() {
-        this.props.setDataDirty(true);
-    }
+    shouldComponentUpdate(nextProps) {        
+        let shouldUpdate = this.props.handsontableData != nextProps.handsontableData
+                        || this.props.formHide!=nextProps.formHide 
+                        || this.props.showGridHeaderCols!=nextProps.showGridHeaderCols
+                        || this.props.showGridHeaderRows!=nextProps.showGridHeaderRows
 
-    shouldComponentUpdate(nextProps, nextState) {
-        
-        let dataDiff = this.props.handsontableData == nextProps.handsontableData;
-        let rtnval =false;
-        if (dataDiff) rtnval = false ; else rtnval=true; 
-        if (this.props.formHide!=nextProps.formHide) rtnval=true;
-        // console.log('should grid component update:' + rtnval)
-        return rtnval;
+        return shouldUpdate;
     }
 
 
@@ -73,6 +67,11 @@ class Grid extends Component {
     componentDidUpdate(prevProps,prevState){
         // re-render hot after expand/collapse of meta
         if (this.props.formHide!=prevProps.formHide) this.callHotRender();
+    }
+
+    // contentHasChanged marks the state as dirty
+    contentHasChanged() {
+        this.props.setDataDirty(true);
     }
 
     // getTableMarkup returns the outerHTML of the table, along with details of the size of the table

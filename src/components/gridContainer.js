@@ -155,10 +155,6 @@ class GridContainer extends Component {
         console.log(metaObject)
         this.setState(metaObject);
         this.setDataDirty(true);
-
-        // call hotrender manually to show meta row/col headers 
-        // styling in grid dynamically
-        this.grid.callHotRender();
     }
 
    

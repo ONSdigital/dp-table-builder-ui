@@ -49,7 +49,7 @@ class MetaData extends Component {
                 <div className={expanderClass}> <a onClick={this.props.setMetaDataHide} href='#'>{this.props.formHide === true? ">": "<"}</a></div>
               
                 <div id="tbNotesContainer" className={tbNotesContainerCls}>
-                    <label >Notes:</label>
+                    <label >Notes: (double-click to return)</label>
                     <textarea value={this.props.metaNotes} id='metaNotes'  onDoubleClick={this.onExpandNotes} onChange={this.getMetaContent} /> 
                 </div>
 
@@ -70,30 +70,8 @@ class MetaData extends Component {
                     </div>
 
                     <div className="notes">
-                        <label >Notes:</label>
+                        <label >Notes: (double-click to expand)</label>
                         <textarea value={this.props.metaNotes} id='metaNotes'   onDoubleClick={this.onExpandNotes} onChange={this.getMetaContent} /> <br />
-                    </div>
-
-                    <div className="sizeUnits">
-                        <label >Cell size :</label>
-                        <div className="select-wrap">
-                            <select id="metaSizeunits" value={this.props.metaSizeunits} onChange={this.getMetaContent}>
-                                <option value="auto">auto</option>
-                                <option value="%">percent %</option>
-                                <option value="em">css em</option>
-                            </select>
-                        </div>
-                           
-                    </div>
-
-                    <div className="keepHeadersTogether">
-                        <label >Auto-size headers :</label>
-                        <div className="select-wrap">
-                            <select id="metaKeepHeadersTogether" value={this.props.metaKeepHeadersTogether} onChange={this.getMetaContent}>
-                                <option value="true">Yes</option>
-                                <option value="false">No</option>
-                            </select>
-                        </div>
                     </div>
 
                     <div className="rows">
@@ -106,7 +84,17 @@ class MetaData extends Component {
                         <input   className="sml" value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
                     </div>
 
-                  
+                    <div className="sizeUnits">
+                        <label title="auto: we'll do our best to keep headings on one line&#10;percent: Column width is a percentage of table width&#10;css em: Column width is relative to font size">Column size:</label>
+                        <div className="select-wrap">
+                            <select id="metaSizeunits" value={this.props.metaSizeunits} onChange={this.getMetaContent}>
+                                <option value="auto">auto</option>
+                                <option value="%">percent %</option>
+                                <option value="em">css em</option>
+                            </select>
+                        </div>                          
+                    </div>
+
                 </div>
             </div>
         );
@@ -125,7 +113,6 @@ MetaData.propTypes = {
     metaHeaderrows: PropTypes.number,
     metaNotes: PropTypes.string,
     setMetaData:PropTypes.func,
-    metaKeepHeadersTogether: PropTypes.string,
     setMetaDataHide:PropTypes.func,
     formHide:PropTypes.bool
    

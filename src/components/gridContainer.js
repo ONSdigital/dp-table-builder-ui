@@ -73,7 +73,6 @@ class GridContainer extends Component {
         this.saveGrid = this.saveGrid.bind(this);
         this.cancel = this.cancel.bind(this);
         this.onError = this.onError.bind(this);    
-        // this.onRefresh = this.onRefresh.bind(this);  
     }
 
 
@@ -146,7 +145,6 @@ class GridContainer extends Component {
         console.log("dirtyFlag set to " + dirtyFlag)
         this.setState({isDirty:dirtyFlag});
         this.setState({statusMessage:''});
-        //this.setState({statusMessage:'dirty:' +dirtyFlag}); // uncomment to debug
     }
 
 
@@ -216,8 +214,6 @@ class GridContainer extends Component {
 
 
     updateTableJsonOutput(usertabledata) {
-    // console.log('in updateTableJson - setState: tableJsonOutput: usertabledata');
-    // console.log(usertabledata);
         this.setState({ tableJsonOutput: usertabledata });
     }
 
@@ -317,8 +313,6 @@ class GridContainer extends Component {
             return obj.hasOwnProperty("rowspan");
         });
         this.setState({ mergeCells: mergeArr });
-        //console.log('this.state.mergeCells');
-        //console.log(this.state.mergeCells);
     }
 
 
@@ -329,8 +323,6 @@ class GridContainer extends Component {
     // out  {row: 1, col: 1, className: "htLeft htMiddle"}
         const cellformats = parsedData.cell_formats;
         const colformats = parsedData.column_formats;
-        //console.log('in alignment cells');
-        //console.log(cellformats)
 
         let cellAlignments = [];
    
@@ -351,8 +343,6 @@ class GridContainer extends Component {
         });
 
         this.setState({ cellAlignments: cellAlignments });
-        //console.log('new cellAlignment');
-        //console.log(this.state.cellAlignments);
     }
 
 
@@ -373,8 +363,6 @@ class GridContainer extends Component {
                 className += "htCenter ";
                 break;
             }
-
-
         }
 
         if (cellObj.hasOwnProperty("vertical_align")) {
@@ -432,8 +420,7 @@ class GridContainer extends Component {
     // extract the Meta notes string from footnotes json
     // when loading an existing table
     getFootNotes(data) {
-        return  data.toString().replace(",","\n",-1);
-        
+        return  data.toString().replace(",","\n",-1);       
     }
 
 
@@ -461,7 +448,6 @@ class GridContainer extends Component {
                 resolve(previewData);
             })
                 .catch( (e)=> {
-                /* error :( */
                     console.log('@@@@p error',e);
                     this.onError("No response from renderer service. Unable to display preview or save content.");
                 })
@@ -495,12 +481,6 @@ class GridContainer extends Component {
             this.setState({statusMessage: message})
         }
     }
-
-
-    // onRefresh() {
-    //     console.log('manual refresh');
-    //     this.grid.callHotRender();
-    // }
     
     render() {
        

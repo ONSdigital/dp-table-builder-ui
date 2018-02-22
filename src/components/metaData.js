@@ -128,9 +128,4 @@ MetaData.propTypes = {
 };
 
 
-// MetaData.defaultProps = {
-//     metaHeadercols: '0'
-// };
-
-
 export default MetaData;

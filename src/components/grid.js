@@ -9,7 +9,6 @@ import { inspect } from 'util';
 class Grid extends Component {
     constructor(props) {
         super(props);
-        //Handsontable.renderers.registerRenderer('firstRowRenderer',this.firstRowRenderer);
     }
 
 

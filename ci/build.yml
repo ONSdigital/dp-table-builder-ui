@@ -1,0 +1,19 @@
+---
+
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: node
+    tag: 8-stretch
+
+inputs:
+  - name: dp-table-builder-ui
+
+outputs:
+  - name: build
+  - name: version
+
+run:
+  path: dp-table-builder-ui/ci/scripts/build.sh

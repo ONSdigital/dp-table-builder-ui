@@ -7,8 +7,9 @@ class MetaData extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { value: '' };
+        this.state = { expandNotes: false};
         this.getMetaContent = this.getMetaContent.bind(this);
+        this.onExpandNotes = this.onExpandNotes.bind(this);
     }
 
    
@@ -23,62 +24,90 @@ class MetaData extends Component {
         this.props.setMetaData(obj);
     }
 
+
+    onExpandNotes() {
+        this.setState({expandNotes:!this.state.expandNotes});
+    }
+
+
     render() {
-        return (
-            <div className='metaContainer'>
+
+
+        const metaContainerVisibility = this.props.formHide === true? " hide": " show";
+        let metaFormCls = metaContainerVisibility;
+        if (this.state.expandNotes === true) metaFormCls=" hide";
               
-                <div className="title">
-                    <label>Title:</label>
-                    <input   value={this.props.metaTitle} id='metaTitle' onChange={this.getMetaContent} />
-                </div>
-                <div className="subtitle">
-                    <label >Subtitle:</label>
-                    <input   value={this.props.metaSubtitle} id='metaSubtitle' onChange={this.getMetaContent} /> <br />
-                </div>
+        let tbNotesContainerCls = this.state.expandNotes === true? " show": " hide";
+        if (this.props.formHide === true) tbNotesContainerCls =" hide";
+        
+        const metaContainerClass = `metaContainer ${metaContainerVisibility}`
+        const expanderClass = `expandCollapse ${metaFormCls}`
+        
+        return (
+            <div className={metaContainerClass} >
 
-                <div className="source">
-                    <label >Source:</label>
-                    <input  value={this.props.metaSource} id='metaSource'  onChange={this.getMetaContent} /> <br />
-                </div>
-
-                <div className="notes">
+                <div className={expanderClass}> <a onClick={this.props.setMetaDataHide} href='#'>{this.props.formHide === true? ">": "<"}</a></div>
+              
+                <div id="tbNotesContainer" className={tbNotesContainerCls}>
                     <label >Notes:</label>
-                    <textarea value={this.props.metaNotes} id='metaNotes'  onChange={this.getMetaContent} /> <br />
+                    <textarea value={this.props.metaNotes} id='metaNotes'  onDoubleClick={this.onExpandNotes} onChange={this.getMetaContent} /> 
                 </div>
 
-                <div className="sizeUnits">
-                    <label >Cell size :</label>
-                    <div className="select-wrap">
-                        <select id="metaSizeunits" value={this.props.metaSizeunits} onChange={this.getMetaContent}>
-                            <option value="auto">auto</option>
-                            <option value="%">percent %</option>
-                            <option value="em">css em</option>
-                        </select>
+                <div id="tbMetaForm" className={metaFormCls}>
+              
+                    <div className="title">
+                        <label>Title:</label>
+                        <input   value={this.props.metaTitle} id='metaTitle' onChange={this.getMetaContent} />
                     </div>
+                    <div className="subtitle">
+                        <label >Subtitle:</label>
+                        <input   value={this.props.metaSubtitle} id='metaSubtitle' onChange={this.getMetaContent} /> <br />
+                    </div>
+
+                    <div className="source">
+                        <label >Source:</label>
+                        <input  value={this.props.metaSource} id='metaSource'  onChange={this.getMetaContent} /> <br />
+                    </div>
+
+                    <div className="notes">
+                        <label >Notes:</label>
+                        <textarea value={this.props.metaNotes} id='metaNotes'   onDoubleClick={this.onExpandNotes} onChange={this.getMetaContent} /> <br />
+                    </div>
+
+                    <div className="sizeUnits">
+                        <label >Cell size :</label>
+                        <div className="select-wrap">
+                            <select id="metaSizeunits" value={this.props.metaSizeunits} onChange={this.getMetaContent}>
+                                <option value="auto">auto</option>
+                                <option value="%">percent %</option>
+                                <option value="em">css em</option>
+                            </select>
+                        </div>
                            
-                </div>
-
-                <div className="keepHeadersTogether">
-                    <label >Auto-size headers :</label>
-                    <div className="select-wrap">
-                        <select id="metaKeepHeadersTogether" value={this.props.metaKeepHeadersTogether} onChange={this.getMetaContent}>
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
                     </div>
-                </div>
 
-                <div className="rows">
-                    <label ># of Header Rows:</label>
-                    <input  className="sml" value={this.props.metaHeaderrows} id='metaHeaderrows'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
-                </div>
+                    <div className="keepHeadersTogether">
+                        <label >Auto-size headers :</label>
+                        <div className="select-wrap">
+                            <select id="metaKeepHeadersTogether" value={this.props.metaKeepHeadersTogether} onChange={this.getMetaContent}>
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div className="cols">
-                    <label ># of Header Cols:</label>
-                    <input   className="sml" value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
-                </div>
+                    <div className="rows">
+                        <label ># of Header Rows:</label>
+                        <input  className="sml" value={this.props.metaHeaderrows} id='metaHeaderrows'  type="number" min="0" max="999"  onChange={this.getMetaContent} /> <br />
+                    </div>
 
-               
+                    <div className="cols">
+                        <label ># of Header Cols:</label>
+                        <input   className="sml" value={this.props.metaHeadercols} id='metaHeadercols'  type="number" min="0" max="999" onChange={this.getMetaContent} /> <br />
+                    </div>
+
+                  
+                </div>
             </div>
         );
     }
@@ -92,18 +121,15 @@ MetaData.propTypes = {
     metaUnits: PropTypes.string,
     metaSource: PropTypes.string,
     metaSizeunits: PropTypes.string,
-    metaHeadercols: PropTypes.string,
-    metaHeaderrows: PropTypes.string,
+    metaHeadercols: PropTypes.number,
+    metaHeaderrows: PropTypes.number,
     metaNotes: PropTypes.string,
     setMetaData:PropTypes.func,
-    metaKeepHeadersTogether: PropTypes.string
+    metaKeepHeadersTogether: PropTypes.string,
+    setMetaDataHide:PropTypes.func,
+    formHide:PropTypes.bool
    
 };
-
-
-// MetaData.defaultProps = {
-//     metaHeadercols: '0'
-// };
 
 
 export default MetaData;

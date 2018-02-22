@@ -47,18 +47,20 @@ class GridContainer extends Component {
             metaSource: '',
             metaNotes: '',
             metaSizeunits: '',
-            metaHeadercols: '',
-            metaHeaderrows: '',
+            metaHeadercols: 0,
+            metaHeaderrows: 0,
             colWidths: [],
             mergeCells: [],
             cellAlignments: [],
             colrowStatus: {},
             isDirty:false,
-            statusMessage:''
+            statusMessage:'',
+            metaFormHide:false
         };
 
         //callback handlers
         this.setMetaDataCallbk = this.setMetaData.bind(this);
+        this.setMetaDataHide = this.setMetaDataHide.bind(this);
         this.changeview = this.changeView.bind(this);
         this.previewPostData = this.processHandsontableData.bind(this);
         this.updateUserTableData = this.updateTableJsonOutput.bind(this);
@@ -70,8 +72,7 @@ class GridContainer extends Component {
         this.onBackFromPreview = this.onBackFromPreview.bind(this);
         this.saveGrid = this.saveGrid.bind(this);
         this.cancel = this.cancel.bind(this);
-        this.onError = this.onError.bind(this);
-    
+        this.onError = this.onError.bind(this);    
     }
 
 
@@ -120,6 +121,7 @@ class GridContainer extends Component {
             filename: rebuildData.filename
         })
 
+     
     }
 
     changeView(viewType) {
@@ -143,7 +145,6 @@ class GridContainer extends Component {
         console.log("dirtyFlag set to " + dirtyFlag)
         this.setState({isDirty:dirtyFlag});
         this.setState({statusMessage:''});
-        //this.setState({statusMessage:'dirty:' +dirtyFlag}); // uncomment to debug
     }
 
 
@@ -155,8 +156,12 @@ class GridContainer extends Component {
     }
 
    
-    saveGrid() {
 
+    setMetaDataHide() {
+        this.setState({metaFormHide:!this.state.metaFormHide})
+    }
+   
+    saveGrid() {
         console.log('saveGrid() called')
         console.log(this.state.isDirty)
         if (this.state.isDirty) {
@@ -209,8 +214,6 @@ class GridContainer extends Component {
 
 
     updateTableJsonOutput(usertabledata) {
-    // console.log('in updateTableJson - setState: tableJsonOutput: usertabledata');
-    // console.log(usertabledata);
         this.setState({ tableJsonOutput: usertabledata });
     }
 
@@ -310,8 +313,6 @@ class GridContainer extends Component {
             return obj.hasOwnProperty("rowspan");
         });
         this.setState({ mergeCells: mergeArr });
-        //console.log('this.state.mergeCells');
-        //console.log(this.state.mergeCells);
     }
 
 
@@ -322,8 +323,6 @@ class GridContainer extends Component {
     // out  {row: 1, col: 1, className: "htLeft htMiddle"}
         const cellformats = parsedData.cell_formats;
         const colformats = parsedData.column_formats;
-        //console.log('in alignment cells');
-        //console.log(cellformats)
 
         let cellAlignments = [];
    
@@ -344,8 +343,6 @@ class GridContainer extends Component {
         });
 
         this.setState({ cellAlignments: cellAlignments });
-        //console.log('new cellAlignment');
-        //console.log(this.state.cellAlignments);
     }
 
 
@@ -366,8 +363,6 @@ class GridContainer extends Component {
                 className += "htCenter ";
                 break;
             }
-
-
         }
 
         if (cellObj.hasOwnProperty("vertical_align")) {
@@ -425,8 +420,7 @@ class GridContainer extends Component {
     // extract the Meta notes string from footnotes json
     // when loading an existing table
     getFootNotes(data) {
-        return  data.toString().replace(",","\n",-1);
-        
+        return  data.toString().replace(",","\n",-1);       
     }
 
 
@@ -454,7 +448,6 @@ class GridContainer extends Component {
                 resolve(previewData);
             })
                 .catch( (e)=> {
-                /* error :( */
                     console.log('@@@@p error',e);
                     this.onError("No response from renderer service. Unable to display preview or save content.");
                 })
@@ -499,6 +492,9 @@ class GridContainer extends Component {
                     <MetaData
                         // setMetaDataCallbk={this.setMetaData.bind(this)}
                         setMetaData={this.setMetaDataCallbk}
+                        setMetaDataHide={this.setMetaDataHide}
+                        formHide={this.state.metaFormHide}
+                        refreshGrid={this.onRefresh}
                         metaTitle={this.state.metaTitle}
                         metaSubtitle={this.state.metaSubtitle}
                         metaKeepHeadersTogether={this.state.metaKeepHeadersTogether}
@@ -507,9 +503,11 @@ class GridContainer extends Component {
                         metaHeadercols={this.state.metaHeadercols}
                         metaHeaderrows={this.state.metaHeaderrows}
                         metaSizeunits={this.state.metaSizeunits}
+
                     />
                     <Grid
                         handsontableData={this.state.handsontableData}
+                        formHide={this.state.metaFormHide}
                         view={this.view}
                         previewPostData={this.previewPostData}
                         updateUserTableData={this.updateUserTableData}
@@ -519,6 +517,8 @@ class GridContainer extends Component {
                         cellMove={this.cellMove}
                         setDataDirty={this.setDataDirty}
                         ref={instance => { this.grid = instance; }}
+                        showGridHeaderRows={this.state.metaHeaderrows}
+                        showGridHeaderCols={this.state.metaHeadercols}
                     />&nbsp;<br />
                 </div>;
         }
@@ -539,15 +539,12 @@ class GridContainer extends Component {
                         <button className={this.state.view === 'editTable'? "hideBtn": "showBtn"} onClick={this.onBackFromPreview}>back</button> &nbsp;
                         <button className={this.state.view === 'editTable'? "hideBtn": "showBtn"} onClick={() => this.postRenderData('xlsx')}>preview xlsx</button> &nbsp;
                         <button className={this.state.view === 'editTable'? "hideBtn": "showBtn"} onClick={() => this.postRenderData('csv')}>preview csv</button> &nbsp;
-                      
                     </div><div className="rowColStatus">{this.state.statusMessage}&nbsp;&nbsp;Row:&nbsp;{this.state.colrowStatus.row}&nbsp;&nbsp;Col:&nbsp;{this.state.colrowStatus.col}</div>
                 </div>
             </div>
         );
            
-
     }
-
 
 }
 

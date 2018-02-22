@@ -33,16 +33,21 @@ class MetaData extends Component {
     render() {
 
 
-        let metaFormCls = this.props.formHide === true? " hide": " show";
-       
+        const metaContainerVisibility = this.props.formHide === true? " hide": " show";
+        let metaFormCls = metaContainerVisibility;
         if (this.state.expandNotes === true) metaFormCls=" hide";
               
         let tbNotesContainerCls = this.state.expandNotes === true? " show": " hide";
         if (this.props.formHide === true) tbNotesContainerCls =" hide";
         
+        const metaContainerClass = `metaContainer ${metaContainerVisibility}`
+        const expanderClass = `expandCollapse ${metaFormCls}`
+        
         return (
-            <div className="metaContainer" >
-               
+            <div className={metaContainerClass} >
+
+                <div className={expanderClass}> <a onClick={this.props.setMetaDataHide} href='#'>{this.props.formHide === true? ">": "<"}</a></div>
+              
                 <div id="tbNotesContainer" className={tbNotesContainerCls}>
                     <label >Notes:</label>
                     <textarea value={this.props.metaNotes} id='metaNotes'  onDoubleClick={this.onExpandNotes} onChange={this.getMetaContent} /> 
@@ -103,7 +108,6 @@ class MetaData extends Component {
 
                   
                 </div>
-                <div className="expandCollapse"> <a onClick={this.props.setMetaDataHide} href='#'>{this.props.formHide === true? ">": "<"}</a></div>
             </div>
         );
     }

@@ -46,7 +46,7 @@ class GridContainer extends Component {
             metaUnits: '',
             metaSource: '',
             metaNotes: '',
-            metaSizeunits: '',
+            metaSizeunits: 'auto',
             metaHeadercols: 0,
             metaHeaderrows: 0,
             colWidths: [],
@@ -113,9 +113,9 @@ class GridContainer extends Component {
         this.setState({
             metaTitle:rebuildData.title,
             metaSubtitle:rebuildData.subtitle,
-            metaNotes: this.getFootNotes(rebuildData), //rebuildData.footnotes,
+            metaNotes: this.getFootNotes(rebuildData.footnotes),
             metaSource:rebuildData.source,
-            metaSizeunits: rebuildData.cell_size_units,
+            metaSizeunits: rebuildData.cell_size_units || 'auto',
             metaHeadercols:  this.getHeaderColumnCount(rebuildData) || 0,
             metaHeaderrows: this.getHeaderRowCount(rebuildData) || 0,
             filename: rebuildData.filename

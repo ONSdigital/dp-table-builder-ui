@@ -7,12 +7,21 @@ class MetaData extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { expandNotes: false};
+        this.state = { 
+            expandNotes: false,
+            notesFocusflag:false};
         this.getMetaContent = this.getMetaContent.bind(this);
         this.onExpandNotes = this.onExpandNotes.bind(this);
     }
 
    
+    componentDidUpdate() {
+        if (this.state.expandNotes===true && this.state.notesFocusflag===true) {
+            this.metaNotesRef.focus();
+            this.setState({notesFocusflag:false})
+        }
+    }
+
 
     getMetaContent(event) {
         const key = event.target.id
@@ -26,8 +35,14 @@ class MetaData extends Component {
 
 
     onExpandNotes() {
-        this.setState({expandNotes:!this.state.expandNotes});
+       
+        this.setState({
+            expandNotes:!this.state.expandNotes,
+            notesFocusflag:!this.state.expandNotes
+        });
+
     }
+
 
 
     render() {
@@ -50,7 +65,7 @@ class MetaData extends Component {
               
                 <div id="tbNotesContainer" className={tbNotesContainerCls}>
                     <label >Notes: (double-click to return)</label>
-                    <textarea value={this.props.metaNotes} id='metaNotes'  onDoubleClick={this.onExpandNotes} onChange={this.getMetaContent} /> 
+                    <textarea  ref={(textarea) => { this.metaNotesRef = textarea; }}  value={this.props.metaNotes} id='metaNotes'  onDoubleClick={this.onExpandNotes} onChange={this.getMetaContent} /> 
                 </div>
 
                 <div id="tbMetaForm" className={metaFormCls}>

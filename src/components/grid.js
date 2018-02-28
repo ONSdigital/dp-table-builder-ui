@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HotTable from 'react-handsontable';
 import Handsontable from 'handsontable';
-import { inspect } from 'util';
+//import { inspect } from 'util';
 
 
 
@@ -13,7 +13,7 @@ class Grid extends Component {
 
 
     componentWillMount() {
-        console.log('will mount');
+      
     }
 
     componentDidMount() {
@@ -100,7 +100,6 @@ class Grid extends Component {
 
     // to help render when conditionally styling in grid for header/ cols 
     callHotRender(){
-        console.log('call hotrender')
         const Hot = this.tableRef.hotInstance;
         Hot.render();
     }

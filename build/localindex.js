@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import './index.css';
 import GridContainer from '../src/components/gridContainer';
 
 
@@ -21,7 +20,7 @@ function onCancel() {
 
 
 ReactDOM.render(
-    <div id="example-component">
+    <div className="builder__inner" id="example-component">
         <GridContainer onCancel={onCancel} onSave={onSave} onError={onError} data={{}} />
     </div>, 
     document.getElementById('app'));

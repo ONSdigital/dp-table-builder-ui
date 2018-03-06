@@ -9,8 +9,6 @@ import FileSaver from 'file-saver';
 import DataService from '../utility/dataService';
 
 
-// const previewURi = 'http://localhost:23100/parse/html';
-// const renderPrefix = 'http://localhost:23100/render/';
 const defaultRendererUri = 'http://localhost:23300';
 
 const ignore_first_row = true;
@@ -369,9 +367,6 @@ class GridContainer extends Component {
 
 
 
-
-
-
     // extract the HeaderCol num from column_formats json
     // when loading an existing table
     getHeaderColumnCount(data) {
@@ -429,7 +424,8 @@ class GridContainer extends Component {
                 resolve(previewData);
             })
                 .catch((e)=> {
-                    this.onError("No response from renderer service. Unable to display preview or save content.");
+                    console.log('postPreviewData error',e);
+                    this.onError("No (or error) response from renderer service. Unable to display preview or save content.");
                 })
         });
     }
@@ -445,7 +441,8 @@ class GridContainer extends Component {
             FileSaver.saveAs(data, this.state.parsedData.render_json.filename + '.' + fileType);
         })
             .catch(function (e) {
-                this.onError("No response from renderer service. Unable to display preview.");
+                console.log('postRenderData error',e);
+                this.onError("No (or error) response from renderer service. Unable to display preview.");
             })
 
     }

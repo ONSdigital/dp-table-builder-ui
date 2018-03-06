@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import HotTable from 'react-handsontable';
 import Handsontable from 'handsontable';
-//import { inspect } from 'util';
-
 
 
 class Grid extends Component {

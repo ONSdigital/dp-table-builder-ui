@@ -12,7 +12,7 @@ const config = {
         'react-hot-loader/patch',
         'webpack-dev-server/client?http://localhost:8080',
         'webpack/hot/only-dev-server',
-        './index.js',
+        '../build/localindex.js',
         './assets/scss/main.scss',
     ],
 
@@ -145,7 +145,6 @@ const config = {
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({ filename: './styles/style.css', disable: false, allChunks: true }),
         // new CopyWebpackPlugin([{ from: 'vendors', to: 'vendors' }]),
-        new OpenBrowserPlugin({ url: 'http://localhost:8080' }),
         new webpack.HotModuleReplacementPlugin(),
     ],
 };

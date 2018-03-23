@@ -7,12 +7,21 @@ class MetaData extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { expandNotes: false};
+        this.state = { 
+            expandNotes: false,
+            notesFocusflag:false};
         this.getMetaContent = this.getMetaContent.bind(this);
         this.onExpandNotes = this.onExpandNotes.bind(this);
     }
 
    
+    componentDidUpdate() {
+        if (this.state.expandNotes===true && this.state.notesFocusflag===true) {
+            this.metaNotesRef.focus();
+            this.setState({notesFocusflag:false})
+        }
+    }
+
 
     getMetaContent(event) {
         const key = event.target.id
@@ -26,8 +35,14 @@ class MetaData extends Component {
 
 
     onExpandNotes() {
-        this.setState({expandNotes:!this.state.expandNotes});
+       
+        this.setState({
+            expandNotes:!this.state.expandNotes,
+            notesFocusflag:!this.state.expandNotes
+        });
+
     }
+
 
 
     render() {
@@ -49,8 +64,8 @@ class MetaData extends Component {
                 <div className={expanderClass}> <a onClick={this.props.setMetaDataHide} href='#'>{this.props.formHide === true? ">": "<"}</a></div>
               
                 <div id="tbNotesContainer" className={tbNotesContainerCls}>
-                    <label >Notes: (double-click to return)</label>
-                    <textarea value={this.props.metaNotes} id='metaNotes'  onDoubleClick={this.onExpandNotes} onChange={this.getMetaContent} /> 
+                    <label >Notes:  <a onClick={this.onExpandNotes} href='#'>collapse</a></label>
+                    <textarea  ref={(textarea) => { this.metaNotesRef = textarea; }}  value={this.props.metaNotes} id='metaNotes'   onChange={this.getMetaContent} /> 
                 </div>
 
                 <div id="tbMetaForm" className={metaFormCls}>
@@ -70,8 +85,8 @@ class MetaData extends Component {
                     </div>
 
                     <div className="notes">
-                        <label >Notes: (double-click to expand)</label>
-                        <textarea value={this.props.metaNotes} id='metaNotes'   onDoubleClick={this.onExpandNotes} onChange={this.getMetaContent} /> <br />
+                        <label >Notes:  <a onClick={this.onExpandNotes} href='#'>expand</a></label>
+                        <textarea value={this.props.metaNotes} id='metaNotes'    onChange={this.getMetaContent} /> <br />
                     </div>
 
                     <div className="rows">

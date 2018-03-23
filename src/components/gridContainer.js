@@ -9,8 +9,6 @@ import FileSaver from 'file-saver';
 import DataService from '../utility/dataService';
 
 
-// const previewURi = 'http://localhost:23100/parse/html';
-// const renderPrefix = 'http://localhost:23100/render/';
 const defaultRendererUri = 'http://localhost:23300';
 
 const ignore_first_row = true;
@@ -92,7 +90,6 @@ class GridContainer extends Component {
 
 
     onBackFromPreview() {
-        console.log(this.state.parsedData.render_json);
         this.rebuildGrid(this.state.parsedData.render_json);
         this.changeView('editTable');
     }
@@ -100,8 +97,6 @@ class GridContainer extends Component {
 
 
     rebuildGrid(rebuildData) {
-        console.log('inside rebuild');
-        console.log(rebuildData);
         this.setColWidths(rebuildData);
         this.setMergeCells(rebuildData.cell_formats);
         this.setCellAlignments(rebuildData);
@@ -109,7 +104,6 @@ class GridContainer extends Component {
 
 
     populateMetaForm(rebuildData){
-        console.log(rebuildData);
         this.setState({
             metaTitle:rebuildData.title,
             metaSubtitle:rebuildData.subtitle,
@@ -142,15 +136,12 @@ class GridContainer extends Component {
 
 
     setDataDirty(dirtyFlag) {
-        console.log("dirtyFlag set to " + dirtyFlag)
         this.setState({isDirty:dirtyFlag});
         this.setState({statusMessage:''});
     }
 
 
     setMetaData(metaObject) {
-        console.log("in set meta")
-        console.log(metaObject)
         this.setState(metaObject);
         this.setDataDirty(true);
     }
@@ -162,17 +153,13 @@ class GridContainer extends Component {
     }
    
     saveGrid() {
-        console.log('saveGrid() called')
-        console.log(this.state.isDirty)
         if (this.state.isDirty) {
             // call parse endpoint first then save
             const prom = this.postPreviewData(this.processHandsontableData());
             prom.then((previewData) => { 
-                //console.log(previewData);
                 let renderJson = this.state.parsedData.render_json;
                 if (this.props.onSave) {
                     this.props.onSave(renderJson);
-                    // console.log('saved ' + renderJson);
                 }
             });
            
@@ -184,7 +171,6 @@ class GridContainer extends Component {
             let renderJson = this.state.parsedData.render_json;
             if (this.props.onSave && renderJson!=null) {
                 this.props.onSave(renderJson);
-                //console.log('saved save without calling parse endpoint first' + renderJson);
             }
         }
 
@@ -194,7 +180,6 @@ class GridContainer extends Component {
 
 
     cancel() {
-        console.log('cancel');
         if (this.props.onCancel) {
             this.props.onCancel();
         }
@@ -205,7 +190,6 @@ class GridContainer extends Component {
         const prom = this.postPreviewData(this.processHandsontableData());
         prom.then((previewData) => {   
             // change to preview only if promise resolved
-            console.log(previewData)
             this.changeView('preview');
             this.setDataDirty(false); 
         })
@@ -221,8 +205,7 @@ class GridContainer extends Component {
 
     // Before we post data to prevew parse endpoint 
     // we add details from meta form
-    processHandsontableData() {
-        console.log('@@@@pre-process');      
+    processHandsontableData() {     
         let data = this.grid.getTableMarkup();
 
         data["filename"] = this.state.filename;
@@ -384,9 +367,6 @@ class GridContainer extends Component {
 
 
 
-
-
-
     // extract the HeaderCol num from column_formats json
     // when loading an existing table
     getHeaderColumnCount(data) {
@@ -427,14 +407,10 @@ class GridContainer extends Component {
 
     postPreviewData(data) {
         return new Promise((resolve, reject) => {
-            console.log('data sending to parse endpoint');
-            console.log(data);
             const uri = this.state.rendererUri + '/parse/html'
             const prm = DataService.tablepostPreview(data,uri)
        
             prm.then((previewData) => {                  
-                console.log('resolve data from parse endpoint');
-                console.log(previewData)
                 previewData.render_json.current_table_width = data.current_table_width;
                 previewData.render_json.current_table_height = data.current_table_height;
                 previewData.render_json.single_em_height = data.single_em_height;
@@ -447,9 +423,9 @@ class GridContainer extends Component {
 
                 resolve(previewData);
             })
-                .catch( (e)=> {
-                    console.log('@@@@p error',e);
-                    this.onError("No response from renderer service. Unable to display preview or save content.");
+                .catch((e)=> {
+                    console.log('postPreviewData error',e);
+                    this.onError("No (or error) response from renderer service. Unable to display preview or save content.");
                 })
         });
     }
@@ -459,16 +435,14 @@ class GridContainer extends Component {
    
     postRenderData(fileType) {
         const uri = this.state.rendererUri + "/render/" + fileType
-        console.log(uri);
         const prm = DataService.tableRenderFilePreview(this.state.parsedData.render_json,uri,fileType)
         Promise.resolve(prm).then((data) => {
             /* do something with the result */
             FileSaver.saveAs(data, this.state.parsedData.render_json.filename + '.' + fileType);
         })
             .catch(function (e) {
-                /* error :( */
-                console.log('@@@@p error',e);
-                this.onError("No response from renderer service. Unable to display preview.");
+                console.log('postRenderData error',e);
+                this.onError("No (or error) response from renderer service. Unable to display preview.");
             })
 
     }

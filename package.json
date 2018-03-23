@@ -1,6 +1,6 @@
 {
   "name": "dp-table-builder-ui",
-  "version": "1.0.16",
+  "version": "1.0.20",
   "homepage": "https://www.npmjs.com/package/dp-table-builder-ui",
   "description": "Handsontable grid implentation",
   "main": "dist/index.js",
@@ -15,9 +15,7 @@
     "test:watch": "jest --watch",
     "coverage": "jest --coverage",
     "precommit": "cross-env npm run lint && npm test",
-    "prepush": "cross-env npm run lint && npm test",
-    "prepare": "npm install && npm run build",
-    "prepublishOnly": "npm run build"
+    "prepush": "cross-env npm run lint && npm test"
   },
   "author": "ons-digital-publishing",
   "contributors": [

@@ -44,6 +44,7 @@ class GridContainer extends Component {
             metaUnits: '',
             metaSource: '',
             metaNotes: '',
+            metaNotesExp: '',
             metaSizeunits: 'auto',
             metaHeadercols: 0,
             metaHeaderrows: 0,
@@ -473,6 +474,7 @@ class GridContainer extends Component {
                         metaSubtitle={this.state.metaSubtitle}
                         metaSource={this.state.metaSource}
                         metaNotes={this.state.metaNotes}
+                        metaNotesExp={this.state.metaNotesExp}
                         metaHeadercols={this.state.metaHeadercols}
                         metaHeaderrows={this.state.metaHeaderrows}
                         metaSizeunits={this.state.metaSizeunits}

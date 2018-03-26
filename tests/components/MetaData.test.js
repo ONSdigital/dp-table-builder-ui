@@ -40,7 +40,7 @@ describe('Meta Data form', () => {
     });
 
     it('should have one metaNotes', () => {
-        expect(wrapper.find('#metaNotes').type()).toEqual('textarea');
+        expect(wrapper.find('#metaNotes').exists()).toEqual(true);
     });
 
     it('should have one meta Size units', () => {

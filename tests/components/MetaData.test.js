@@ -39,7 +39,7 @@ describe('Meta Data form', () => {
         expect(wrapper.find('#metaSource').type()).toEqual('input');
     });
 
-    it('should have one metaNotes', () => {
+    it('should have one or more metaNotes', () => {
         expect(wrapper.find('#metaNotes').exists()).toEqual(true);
     });
 

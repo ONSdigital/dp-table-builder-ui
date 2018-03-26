@@ -1,7 +1,9 @@
 #!/bin/bash -eux
 
 pushd dp-table-builder-ui
-  npm install --unsafe-perm && npm run build
+  npm install --unsafe-perm
+  npm test
+  npm run build
 popd
 
 # copy the artifacts to the target we run bucket sync from

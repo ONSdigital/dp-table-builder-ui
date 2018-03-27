@@ -24,13 +24,24 @@ class MetaData extends Component {
 
 
     getMetaContent(event) {
-        const key = event.target.id
+        let key = event.target.id
         const val = event.target.value
+       
         var obj = {}
         obj[key] = val;
         obj["isDirty"]=true;
         console.log(obj);
         this.props.setMetaData(obj);
+
+
+        if (key ==='metaNotesExp') {
+            this.props.setMetaData({metaNotes:val});
+        }
+
+        if (key ==='metaNotes') {
+            this.props.setMetaData({metaNotesExp:val})
+        }
+
     }
 
 
@@ -40,14 +51,11 @@ class MetaData extends Component {
             expandNotes:!this.state.expandNotes,
             notesFocusflag:!this.state.expandNotes
         });
-
     }
 
 
 
     render() {
-
-
         const metaContainerVisibility = this.props.formHide === true? " hide": " show";
         let metaFormCls = metaContainerVisibility;
         if (this.state.expandNotes === true) metaFormCls=" hide";
@@ -65,7 +73,7 @@ class MetaData extends Component {
               
                 <div id="tbNotesContainer" className={tbNotesContainerCls}>
                     <label >Notes:  <a onClick={this.onExpandNotes} href='#'>collapse</a></label>
-                    <textarea  ref={(textarea) => { this.metaNotesRef = textarea; }}  value={this.props.metaNotes} id='metaNotes'   onChange={this.getMetaContent} /> 
+                    <textarea  ref={(textarea) => { this.metaNotesRef = textarea; }}  value={this.props.metaNotesExp} id='metaNotesExp'  onChange={this.getMetaContent}  /> 
                 </div>
 
                 <div id="tbMetaForm" className={metaFormCls}>
@@ -127,6 +135,7 @@ MetaData.propTypes = {
     metaHeadercols: PropTypes.number,
     metaHeaderrows: PropTypes.number,
     metaNotes: PropTypes.string,
+    metaNotesExp: PropTypes.string,
     setMetaData:PropTypes.func,
     setMetaDataHide:PropTypes.func,
     formHide:PropTypes.bool

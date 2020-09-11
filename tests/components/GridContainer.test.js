@@ -136,6 +136,19 @@ describe('child Components exist', () => {
         expect(baseProps.onError).toHaveBeenCalledTimes(1);
     })
 
+    it('calculates the number of required header rows based on the count of empty cells on the left of the top row', () => {
+        const instance = gridcontainerWrapper.instance()
+        instance.handsontableData = [["", "column merged", ""], ["", "header", "header"], ["header", "value", "value"]];
+        expect(instance.calculateNumberOfHeaderRowsRequired(instance.handsontableData)).toEqual(2)
+    })
+
+    it('throws an error when the number of row headers set by the user is not equal to the number of required row headers', () => {
+        const instance = gridcontainerWrapper.instance()
+        instance.handsontableData = [["", "column merged", ""], ["", "header", "header"], ["header", "value", "value"]];
+        expect(instance.tableHasAppropriateHeaderRowsSet()).toEqual(false)
+        expect(baseProps.onError).toHaveBeenCalledTimes(1);
+    })
+
 
 
 

@@ -155,7 +155,7 @@ class GridContainer extends Component {
     }
    
     saveGrid() {
-        if (this.tableHasAtLeastOneHeaderRowOrColumn() && this.tableHasAppropriateHeaderColumnsSet()) {
+        if (this.tableHasAtLeastOneHeaderRowOrColumn() && this.tableHasAppropriateHeaderColumnsSet() && this.tableHasAppropriateHeaderRowsSet()) {
             if (this.state.isDirty) {
                 // call parse endpoint first then save
                 const prom = this.postPreviewData(this.processHandsontableData());
@@ -191,7 +191,7 @@ class GridContainer extends Component {
 
 
     onPreviewGrid() {
-        if (this.tableHasAtLeastOneHeaderRowOrColumn() && this.tableHasAppropriateHeaderColumnsSet()) {
+        if (this.tableHasAtLeastOneHeaderRowOrColumn() && this.tableHasAppropriateHeaderColumnsSet() && this.tableHasAppropriateHeaderRowsSet()) {
             const prom = this.postPreviewData(this.processHandsontableData());
             prom.then((previewData) => {   
                 // change to preview only if promise resolved
@@ -488,6 +488,30 @@ class GridContainer extends Component {
         for (let i = 0; i < topRow.length; i++) {
             if (!topRow[i]) {
                 required++;
+            } else {
+                break;
+            }
+        }
+        return required;
+    }
+
+    tableHasAppropriateHeaderRowsSet() {
+        let numberOfRowsWithEmptyFirstColumn = this.calculateNumberOfHeaderRowsRequired(this.state.handsontableData);
+
+        if (this.state.metaHeaderrows < numberOfRowsWithEmptyFirstColumn) {
+            this.onError(`Incorrect number of header rows set. Expected ${numberOfRowsWithEmptyFirstColumn}, got ${this.state.metaHeaderrows}`);
+            return false;
+        }
+
+        return true
+    }
+
+    calculateNumberOfHeaderRowsRequired(data) {
+        let required = 0;
+        console.log(data)
+        for (let i = 0; i < data.length; i++) {
+            if (!data[i][0]) {
+                required++
             } else {
                 break;
             }

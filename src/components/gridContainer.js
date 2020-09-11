@@ -13,6 +13,7 @@ const defaultRendererUri = 'http://localhost:23300';
 
 const ignore_first_row = true;
 const ignore_first_column = true;
+const no_headers_error_message = "No headers have been set. Please set at least one header column or header row."
 
 class GridContainer extends Component {
 
@@ -188,12 +189,15 @@ class GridContainer extends Component {
 
 
     onPreviewGrid() {
-        const prom = this.postPreviewData(this.processHandsontableData());
-        prom.then((previewData) => {   
-            // change to preview only if promise resolved
-            this.changeView('preview');
-            this.setDataDirty(false); 
-        })
+        if (this.tableHasAtLeastOneHeaderRowOrColumn()) {
+            const prom = this.postPreviewData(this.processHandsontableData());
+            prom.then((previewData) => {   
+                // change to preview only if promise resolved
+                this.changeView('preview');
+                this.setDataDirty(false); 
+            })
+        }
+
     }
 
 
@@ -456,7 +460,20 @@ class GridContainer extends Component {
             this.setState({statusMessage: message})
         }
     }
+
+    // validation methods to determine whether the table meets accessibility standards
+    tableHasAtLeastOneHeaderRowOrColumn() {
+        if (this.state.metaHeadercols === 0 && this.state.metaHeaderrows === 0) {
+            this.onError(no_headers_error_message);
+            return false;
+        }
+        return true;
+    }
     
+    tableHasAdjacentEmptyCellsAsHeader() {
+
+    }
+
     render() {
        
         let viewComponent= null;

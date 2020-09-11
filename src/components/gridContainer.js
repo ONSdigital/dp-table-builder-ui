@@ -155,28 +155,30 @@ class GridContainer extends Component {
     }
    
     saveGrid() {
-        if (this.state.isDirty) {
-            // call parse endpoint first then save
-            const prom = this.postPreviewData(this.processHandsontableData());
-            prom.then((previewData) => { 
+        if (this.tableHasAtLeastOneHeaderRowOrColumn()) {
+            if (this.state.isDirty) {
+                // call parse endpoint first then save
+                const prom = this.postPreviewData(this.processHandsontableData());
+                prom.then((previewData) => { 
+                    let renderJson = this.state.parsedData.render_json;
+                    if (this.props.onSave) {
+                        this.props.onSave(renderJson);
+                    }
+                });
+               
+            }
+    
+            else
+            {
+                // save without calling parse endpoint first
                 let renderJson = this.state.parsedData.render_json;
-                if (this.props.onSave) {
+                if (this.props.onSave && renderJson!=null) {
                     this.props.onSave(renderJson);
                 }
-            });
-           
-        }
-
-        else
-        {
-            // save without calling parse endpoint first
-            let renderJson = this.state.parsedData.render_json;
-            if (this.props.onSave && renderJson!=null) {
-                this.props.onSave(renderJson);
             }
+    
+            this.setState({statusMessage:"saved"})
         }
-
-        this.setState({statusMessage:"saved"})
     }
 
 
@@ -544,6 +546,8 @@ class GridContainer extends Component {
 GridContainer.propTypes = {
     data: PropTypes.object,
     onSave: PropTypes.func,
+    onError: PropTypes.func,
+    onCancel: PropTypes.func,
     rendererUri:PropTypes.string
 }
 

@@ -465,7 +465,7 @@ class GridContainer extends Component {
 
     // validation methods to determine whether the table meets accessibility standards
     tableHasAtLeastOneHeaderRowOrColumn() {
-        if (this.state.metaHeadercols === 0 && this.state.metaHeaderrows === 0) {
+        if (this.state.metaHeadercols == 0 && this.state.metaHeaderrows == 0) {
             this.onError(no_headers_error_message);
             return false;
         }
@@ -476,8 +476,8 @@ class GridContainer extends Component {
         const topRow = this.state.handsontableData[0];
         const numberOfRequiredHeaderColumns = this.calculateNumberOfHeaderColumnsRequired(topRow)
 
-        if (parseInt(this.state.metaHeadercols) !== numberOfRequiredHeaderColumns) {
-            this.onError(`Incorrect number of header columns set. Expected ${numberOfRequiredHeaderColumns}, got ${this.state.metaHeadercols}`);
+        if (parseInt(this.state.metaHeadercols) < numberOfRequiredHeaderColumns) {
+            this.onError(`Incorrect number of header columns set. Expected at least ${numberOfRequiredHeaderColumns}, got ${this.state.metaHeadercols}`);
             return false;
         }
         return true
@@ -485,6 +485,7 @@ class GridContainer extends Component {
 
     calculateNumberOfHeaderColumnsRequired(topRow) {
         let required = 0;
+        
         for (let i = 0; i < topRow.length; i++) {
             if (!topRow[i]) {
                 required++;
@@ -496,10 +497,10 @@ class GridContainer extends Component {
     }
 
     tableHasAppropriateHeaderRowsSet() {
-        let numberOfRowsWithEmptyFirstColumn = this.calculateNumberOfHeaderRowsRequired(this.state.handsontableData);
+        let numberOfRequiredHeaderRows = this.calculateNumberOfHeaderRowsRequired(this.state.handsontableData);
 
-        if (parseInt(this.state.metaHeaderrows) !== numberOfRowsWithEmptyFirstColumn) {
-            this.onError(`Incorrect number of header rows set. Expected ${numberOfRowsWithEmptyFirstColumn}, got ${this.state.metaHeaderrows}`);
+        if (parseInt(this.state.metaHeaderrows) < numberOfRequiredHeaderRows) {
+            this.onError(`Incorrect number of header rows set. Expected at least ${numberOfRequiredHeaderRows}, got ${this.state.metaHeaderrows}`);
             return false;
         }
 
@@ -511,6 +512,9 @@ class GridContainer extends Component {
         for (let i = 0; i < data.length; i++) {
             if (!data[i][0]) {
                 required++
+            } else if (data[0][0] !== "") {
+                required++;
+                break;
             } else {
                 break;
             }

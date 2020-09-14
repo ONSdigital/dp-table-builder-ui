@@ -122,29 +122,66 @@ describe('child Components exist', () => {
         expect(baseProps.onError).toHaveBeenCalledTimes(1)
     })
 
-    it('calculates the number of required header columns based on the count of empty cells on the left of the top row', () => {
+    it('passes validation with a simple table structure', () => {
         const instance = gridcontainerWrapper.instance()
-        instance.handsontableData = [["", null, "col"], ["row 1 header", "row 1 value"], ["row 2 header", "row 2 value"]];
+        instance.handsontableData = [
+            ["Name", "Age", "Height"], 
+            ["Name A", "30", "180cm"], 
+            ["Name B", "32", "182cm"]
+        ];
         const topRow = instance.handsontableData[0]
-        expect(instance.calculateNumberOfHeaderColumnsRequired(topRow)).toEqual(2)
+        expect(instance.calculateNumberOfHeaderColumnsRequired(topRow)).toEqual(0)
+        expect(instance.calculateNumberOfHeaderRowsRequired(instance.handsontableData)).toEqual(1)
+    })
+
+    it('passes validation with a two tier header table', () => {
+        const instance = gridcontainerWrapper.instance()
+        instance.handsontableData = [
+            ["", "Mars", "", "Venus", ""], // empty string elements after Mars/Venus = merged cell
+            ["", "Produced", "Sold", "Produced", "Sold"], 
+            ["Teddy Bears", "50,000", "30,000", "100,000", "80,000"],
+            ["Board Games", "10,000", "5,000", "12,000", "9,000"]
+        ];
+        const topRow = instance.handsontableData[0]
+        expect(instance.calculateNumberOfHeaderColumnsRequired(topRow)).toEqual(1)
+        expect(instance.calculateNumberOfHeaderRowsRequired(instance.handsontableData)).toEqual(2)
+    })
+
+    it('passes validation with a table with three headers related to each data cell', () => {
+        const instance = gridcontainerWrapper.instance()
+        instance.handsontableData = 
+            [
+                ["", "Studio", "Apt", "Chalet", "Villa"], 
+                ["Paris", "", "", "", ""], // merged cells
+                ["1 Bed", "10", "3", "3", "4"],
+                ["2 Bed", "10", "3", "3", "4"],
+                ["Rome", "", "", "", ""], // merged cells
+                ["1 Bed", "10", "3", "3", "4"],
+                ["2 Bed", "10", "3", "3", "4"]
+            ]
+        const topRow = instance.handsontableData[0]
+        expect(instance.calculateNumberOfHeaderColumnsRequired(topRow)).toEqual(1)
+        expect(instance.calculateNumberOfHeaderRowsRequired(instance.handsontableData)).toEqual(1)
     })
 
     it('throws an error when the number of column headers set by the user is not equal to the number of required column headers', () => {
         const instance = gridcontainerWrapper.instance()
-        instance.handsontableData = [["", "column"], ["row 1 header", "row 1 value"], ["row 2 header", "row 2 value"]];
+        instance.handsontableData = [
+            ["", "column"], 
+            ["row 1 header", "row 1 value"], 
+            ["row 2 header", "row 2 value"]
+        ];
         expect(instance.tableHasAppropriateHeaderColumnsSet()).toEqual(false)
         expect(baseProps.onError).toHaveBeenCalledTimes(1);
     })
 
-    it('calculates the number of required header rows based on the count of empty cells on the left of the top row', () => {
-        const instance = gridcontainerWrapper.instance()
-        instance.handsontableData = [["", "column merged", ""], ["", "header", "header"], ["header", "value", "value"]];
-        expect(instance.calculateNumberOfHeaderRowsRequired(instance.handsontableData)).toEqual(2)
-    })
-
     it('throws an error when the number of row headers set by the user is not equal to the number of required row headers', () => {
         const instance = gridcontainerWrapper.instance()
-        instance.handsontableData = [["", "column merged", ""], ["", "header", "header"], ["header", "value", "value"]];
+        instance.handsontableData = [
+            ["", "column merged", ""], 
+            ["", "header", "header"], 
+            ["header", "value", "value"]
+        ];
         expect(instance.tableHasAppropriateHeaderRowsSet()).toEqual(false)
         expect(baseProps.onError).toHaveBeenCalledTimes(1);
     })

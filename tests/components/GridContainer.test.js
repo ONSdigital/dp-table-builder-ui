@@ -115,9 +115,26 @@ describe('child Components exist', () => {
         expect(expResult).toMatch("\n");
     });
 
-    it('throws an error if no header rows/cols are set', () => {
-        const instance = gridcontainerWrapper.instance();
-        expect(instance.tableHasAtLeastOneHeaderRowOrColumn()).toEqual(false)
+    it('handles errors when all validation methods fail', () => {
+        const instance = gridcontainerWrapper.instance()
+        instance.handsontableData = [["", "", ""], ["", "", ""]]
+        instance.onPreviewGrid()
+        expect(baseProps.onError).toHaveBeenCalledTimes(1)
+    })
+
+    it('handles errors when header rows are not properly set', () => {
+        const instance = gridcontainerWrapper.instance()
+        instance.handsontableData = [["123", "456", "789"], ["A", "B", "C"]]
+        instance.onPreviewGrid()
+        expect(instance.tableHasAppropriateHeaderRowsSet()).toBeTruthy();
+        expect(baseProps.onError).toHaveBeenCalledTimes(1)
+    })
+
+    it('handles errors when header columns are not properly set', () => {
+        const instance = gridcontainerWrapper.instance()
+        instance.handsontableData = [["", "456", "789"], ["Row Heading", "B", "C"]]
+        instance.onPreviewGrid()
+        expect(instance.tableHasAppropriateHeaderColumnsSet()).toBeTruthy();
         expect(baseProps.onError).toHaveBeenCalledTimes(1)
     })
 
@@ -130,7 +147,7 @@ describe('child Components exist', () => {
         ];
         const topRow = instance.handsontableData[0]
         expect(instance.calculateNumberOfHeaderColumnsRequired(topRow)).toEqual(0)
-        expect(instance.calculateNumberOfHeaderRowsRequired(instance.handsontableData)).toEqual(1)
+        expect(instance.calculateNumberOfHeaderRowsRequired(instance.handsontableData)).toEqual(0)
     })
 
     it('passes validation with a two tier header table', () => {
@@ -163,28 +180,7 @@ describe('child Components exist', () => {
         expect(instance.calculateNumberOfHeaderRowsRequired(instance.handsontableData)).toEqual(1)
     })
 
-    it('throws an error when the number of column headers set by the user is not equal to the number of required column headers', () => {
-        const instance = gridcontainerWrapper.instance()
-        instance.handsontableData = [
-            ["", "column"], 
-            ["row 1 header", "row 1 value"], 
-            ["row 2 header", "row 2 value"]
-        ];
-        expect(instance.tableHasAppropriateHeaderColumnsSet()).toEqual(false)
-        expect(baseProps.onError).toHaveBeenCalledTimes(1);
-    })
-
-    it('throws an error when the number of row headers set by the user is not equal to the number of required row headers', () => {
-        const instance = gridcontainerWrapper.instance()
-        instance.handsontableData = [
-            ["", "column merged", ""], 
-            ["", "header", "header"], 
-            ["header", "value", "value"]
-        ];
-        expect(instance.tableHasAppropriateHeaderRowsSet()).toEqual(false)
-        expect(baseProps.onError).toHaveBeenCalledTimes(1);
-    })
-
+    
 
 
 

@@ -55,7 +55,7 @@ class GridContainer extends Component {
             colrowStatus: {},
             isDirty:false,
             statusMessage:'',
-            metaFormHide:false
+            metaFormHide:false,
         };
 
         //callback handlers
@@ -155,7 +155,7 @@ class GridContainer extends Component {
     }
    
     saveGrid() {
-        if (this.tableHasAtLeastOneHeaderRowOrColumn() && this.tableHasAppropriateHeaderColumnsSet() && this.tableHasAppropriateHeaderRowsSet()) {
+        if (this.isValidTable()) {
             if (this.state.isDirty) {
                 // call parse endpoint first then save
                 const prom = this.postPreviewData(this.processHandsontableData());
@@ -191,7 +191,7 @@ class GridContainer extends Component {
 
 
     onPreviewGrid() {
-        if (this.tableHasAtLeastOneHeaderRowOrColumn() && this.tableHasAppropriateHeaderColumnsSet() && this.tableHasAppropriateHeaderRowsSet()) {
+        if (this.isValidTable()) {
             const prom = this.postPreviewData(this.processHandsontableData());
             prom.then((previewData) => {   
                 // change to preview only if promise resolved
@@ -464,12 +464,27 @@ class GridContainer extends Component {
     }
 
     // validation methods to determine whether the table meets accessibility standards
+    isValidTable() {
+        const errors = [this.tableHasAtLeastOneHeaderRowOrColumn(),
+            this.tableHasAppropriateHeaderColumnsSet(),
+            this.tableHasAppropriateHeaderRowsSet()].filter(valid => valid)
+
+        if (errors.length === 0) {
+            return true
+        }
+
+        this.onError(`
+        Errors validating table headers: \n
+        ${errors.map(error => `- ${error}\n`).join("")}
+        `)
+
+        return false
+    }
+
     tableHasAtLeastOneHeaderRowOrColumn() {
         if (this.state.metaHeadercols == 0 && this.state.metaHeaderrows == 0) {
-            this.onError(no_headers_error_message);
-            return false;
+            return no_headers_error_message;
         }
-        return true;
     }
     
     tableHasAppropriateHeaderColumnsSet() {
@@ -477,10 +492,8 @@ class GridContainer extends Component {
         const numberOfRequiredHeaderColumns = this.calculateNumberOfHeaderColumnsRequired(topRow)
 
         if (parseInt(this.state.metaHeadercols) < numberOfRequiredHeaderColumns) {
-            this.onError(`Incorrect number of header columns set. Expected at least ${numberOfRequiredHeaderColumns}, got ${this.state.metaHeadercols}`);
-            return false;
+            return `Incorrect number of header columns set. Expected at least ${numberOfRequiredHeaderColumns}, got ${this.state.metaHeadercols}`;
         }
-        return true
     }
 
     calculateNumberOfHeaderColumnsRequired(topRow) {
@@ -500,11 +513,8 @@ class GridContainer extends Component {
         let numberOfRequiredHeaderRows = this.calculateNumberOfHeaderRowsRequired(this.state.handsontableData);
 
         if (parseInt(this.state.metaHeaderrows) < numberOfRequiredHeaderRows) {
-            this.onError(`Incorrect number of header rows set. Expected at least ${numberOfRequiredHeaderRows}, got ${this.state.metaHeaderrows}`);
-            return false;
+            return `Incorrect number of header rows set. Expected at least ${numberOfRequiredHeaderRows}, got ${this.state.metaHeaderrows}`;
         }
-
-        return true
     }
 
     calculateNumberOfHeaderRowsRequired(data) {
@@ -512,9 +522,6 @@ class GridContainer extends Component {
         for (let i = 0; i < data.length; i++) {
             if (!data[i][0]) {
                 required++
-            } else if (data[0][0] !== "") {
-                required++;
-                break;
             } else {
                 break;
             }

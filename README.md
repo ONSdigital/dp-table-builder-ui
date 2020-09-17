@@ -19,5 +19,17 @@ Make sure you have the latest Stable or LTS version of Node.js installed.
 - `npm run test:watch` - run all tests in watch mode
 - `npm run coverage` - generate code coverage report in the `coverage` folder
 
+## Troubleshooting
 
+### Error saying python2 not found in path for macOS users
 
+#### Solution You will need to install python2
+
+As other services use Python3, it is advised to use pyenv to manage the python versions
+There is a `.python-version` file that will set the python version locally
+1. `brew install pyenv`
+2. if running on macOS 10.9 > then run
+`brew install zlib; CPPFLAGS="-I$(brew --prefix zlib)/include" pyenv install 2.7.16`
+else run 
+`pyenv install 2.7.16`
+3. `pyenv local 2.7.16` (This command shouldn't be required but if the dot file isn't picked up then this will set it)

@@ -13,6 +13,7 @@ const defaultRendererUri = 'http://localhost:23300';
 
 const ignore_first_row = true;
 const ignore_first_column = true;
+const no_headers_error_message = "No headers have been set. Please set at least one header column or header row."
 
 class GridContainer extends Component {
 
@@ -44,6 +45,7 @@ class GridContainer extends Component {
             metaUnits: '',
             metaSource: '',
             metaNotes: '',
+            metaNotesExp: '',
             metaSizeunits: 'auto',
             metaHeadercols: 0,
             metaHeaderrows: 0,
@@ -53,7 +55,7 @@ class GridContainer extends Component {
             colrowStatus: {},
             isDirty:false,
             statusMessage:'',
-            metaFormHide:false
+            metaFormHide:false,
         };
 
         //callback handlers
@@ -153,28 +155,30 @@ class GridContainer extends Component {
     }
    
     saveGrid() {
-        if (this.state.isDirty) {
-            // call parse endpoint first then save
-            const prom = this.postPreviewData(this.processHandsontableData());
-            prom.then((previewData) => { 
+        if (this.isValidTable()) {
+            if (this.state.isDirty) {
+                // call parse endpoint first then save
+                const prom = this.postPreviewData(this.processHandsontableData());
+                prom.then((previewData) => { 
+                    let renderJson = this.state.parsedData.render_json;
+                    if (this.props.onSave) {
+                        this.props.onSave(renderJson);
+                    }
+                });
+               
+            }
+    
+            else
+            {
+                // save without calling parse endpoint first
                 let renderJson = this.state.parsedData.render_json;
-                if (this.props.onSave) {
+                if (this.props.onSave && renderJson!=null) {
                     this.props.onSave(renderJson);
                 }
-            });
-           
-        }
-
-        else
-        {
-            // save without calling parse endpoint first
-            let renderJson = this.state.parsedData.render_json;
-            if (this.props.onSave && renderJson!=null) {
-                this.props.onSave(renderJson);
             }
+    
+            this.setState({statusMessage:"saved"})
         }
-
-        this.setState({statusMessage:"saved"})
     }
 
 
@@ -187,12 +191,15 @@ class GridContainer extends Component {
 
 
     onPreviewGrid() {
-        const prom = this.postPreviewData(this.processHandsontableData());
-        prom.then((previewData) => {   
-            // change to preview only if promise resolved
-            this.changeView('preview');
-            this.setDataDirty(false); 
-        })
+        if (this.isValidTable()) {
+            const prom = this.postPreviewData(this.processHandsontableData());
+            prom.then((previewData) => {   
+                // change to preview only if promise resolved
+                this.changeView('preview');
+                this.setDataDirty(false); 
+            })
+        }
+
     }
 
 
@@ -455,7 +462,73 @@ class GridContainer extends Component {
             this.setState({statusMessage: message})
         }
     }
+
+    // validation methods to determine whether the table meets accessibility standards
+    isValidTable() {
+        const errors = [this.tableHasAtLeastOneHeaderRowOrColumn(),
+            this.tableHasAppropriateHeaderColumnsSet(),
+            this.tableHasAppropriateHeaderRowsSet()].filter(valid => valid)
+
+        if (errors.length === 0) {
+            return true
+        }
+
+        this.onError(`
+        Errors validating table headers: \n
+        ${errors.map(error => `- ${error}\n`).join("")}
+        `)
+
+        return false
+    }
+
+    tableHasAtLeastOneHeaderRowOrColumn() {
+        if (this.state.metaHeadercols == 0 && this.state.metaHeaderrows == 0) {
+            return no_headers_error_message;
+        }
+    }
     
+    tableHasAppropriateHeaderColumnsSet() {
+        const topRow = this.state.handsontableData[0];
+        const numberOfRequiredHeaderColumns = this.calculateNumberOfHeaderColumnsRequired(topRow)
+
+        if (parseInt(this.state.metaHeadercols) < numberOfRequiredHeaderColumns) {
+            return `Incorrect number of header columns set. Expected at least ${numberOfRequiredHeaderColumns}, got ${this.state.metaHeadercols}`;
+        }
+    }
+
+    calculateNumberOfHeaderColumnsRequired(topRow) {
+        let required = 0;
+        
+        for (let i = 0; i < topRow.length; i++) {
+            if (!topRow[i]) {
+                required++;
+            } else {
+                break;
+            }
+        }
+        return required;
+    }
+
+    tableHasAppropriateHeaderRowsSet() {
+        let numberOfRequiredHeaderRows = this.calculateNumberOfHeaderRowsRequired(this.state.handsontableData);
+
+        if (parseInt(this.state.metaHeaderrows) < numberOfRequiredHeaderRows) {
+            return `Incorrect number of header rows set. Expected at least ${numberOfRequiredHeaderRows}, got ${this.state.metaHeaderrows}`;
+        }
+    }
+
+    calculateNumberOfHeaderRowsRequired(data) {
+        let required = 0;
+        for (let i = 0; i < data.length; i++) {
+            if (!data[i][0]) {
+                required++
+            } else {
+                break;
+            }
+        }
+        return required;
+    }
+
     render() {
        
         let viewComponent= null;
@@ -473,6 +546,7 @@ class GridContainer extends Component {
                         metaSubtitle={this.state.metaSubtitle}
                         metaSource={this.state.metaSource}
                         metaNotes={this.state.metaNotes}
+                        metaNotesExp={this.state.metaNotesExp}
                         metaHeadercols={this.state.metaHeadercols}
                         metaHeaderrows={this.state.metaHeaderrows}
                         metaSizeunits={this.state.metaSizeunits}
@@ -525,6 +599,8 @@ class GridContainer extends Component {
 GridContainer.propTypes = {
     data: PropTypes.object,
     onSave: PropTypes.func,
+    onError: PropTypes.func,
+    onCancel: PropTypes.func,
     rendererUri:PropTypes.string
 }
 

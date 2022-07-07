@@ -5,17 +5,12 @@ import Adapter from 'enzyme-adapter-react-16';
 
 import GridContainer from '../../src/components/gridContainer';
 import MetaData from '../../src/components/metaData';
-import Grid from '../../src/components/grid';
-import HotTable from 'react-handsontable';
-
 
 configure({ adapter: new Adapter() });
 
 describe('child Components exist', () => {
     let metawrapper
-    let gridcontainerWrapper
-    let grid
-    
+    let gridcontainerWrapper    
 
     // example dataset that is returned from the renderer parse endpoint
     // this is used to render a table from existing data
@@ -25,32 +20,22 @@ describe('child Components exist', () => {
         onError: jest.fn()
     }
 
-
     beforeEach(() => {
         metawrapper = shallow(<MetaData />);
         gridcontainerWrapper = shallow(<GridContainer {...baseProps} />);
-        //grid = shallow(<Grid />);
     });
-
 
     afterEach(() => {
         baseProps.onError.mockClear()
     })
 
-
     it('MetaData component should exist', () => {
         expect(metawrapper).toBeTruthy();
     });
 
-
-
-
     it('Gridcontainer component should exist', () => {
-        // const gridcon = shallow(<GridContainer/>);
         expect(gridcontainerWrapper).toBeTruthy();
     });
-
-  
 
     //test merge cells parse function is converted 
     //to format expected by handsontable
@@ -61,8 +46,6 @@ describe('child Components exist', () => {
         expect(instance.state.mergeCells).toEqual(expResult)
     });
 
-
-
     //test col width parse function is converted 
     //to format expected by handsontable
     it('Col width is parsed in correct format', () => {
@@ -71,8 +54,6 @@ describe('child Components exist', () => {
         instance.setColWidths(renderJson)
         expect(instance.state.colWidths).toEqual(expResult)
     });
-
-
 
     //test cellAlignments parse function is converted 
     //to format expected by handsontable
@@ -83,9 +64,6 @@ describe('child Components exist', () => {
         expect(instance.state.cellAlignments).toContainEqual(expect.objectContaining(expResult))
     });
 
-
-
-
     //test getHeaderColCount parse function is converted 
     //to format expected by handsontable
     it('Gets correct header  column count from parsed data', () => {
@@ -95,7 +73,6 @@ describe('child Components exist', () => {
         expect(headerColCount).toEqual(expResult)
     });
 
-
     //test getHeaderRowCount parse function is converted 
     //to format expected by handsontable
     it('Gets correct header row  count from parsed data', () => {
@@ -104,7 +81,6 @@ describe('child Components exist', () => {
         const headerRowCount= instance.getHeaderRowCount(renderJson)
         expect(headerRowCount).toEqual(expResult)
     });
-
 
     //test Footnotes parse function is converted 
     //from comma separated to one with newlines
@@ -179,68 +155,4 @@ describe('child Components exist', () => {
         expect(instance.calculateNumberOfHeaderColumnsRequired(topRow)).toEqual(1)
         expect(instance.calculateNumberOfHeaderRowsRequired(instance.handsontableData)).toEqual(1)
     })
-
-    
-
-
-
-    // it('Meta Data sets state in parent', () => {
-       
-    //     const form =  metawrapper.find('#metaTitle');
-    //     form.props().onChange({target: {
-    //         name: 'metaTitle',
-    //         value: 'xx'
-    //     }});
-           
-    //     // then
-    //     expect(gridcontainerWrapper.state('metaTitle')).toEqual('xx');
-    // });
-
-
-  
-
-    // it('Testing add Num', () => {
-    //     //
-    //     // then
-    //     expect( gridcontainerWrapper.instance().addNum(5)).toBe(10)
-    // });
-
-
-
-
-
-  
-
-
-
 });
-
-
-
-// works - test('adds 1 + 2 to equal 3', () => {
-//     const gridcon = shallow(<GridContainer/>);
-//     expect( gridcon.instance().addNum(5)).toBe(10)
-// })
-
-
-
-
-
-// A simple example test
-// describe('#postPreviewDat() using Promises', () => {
-//     let wrapper;
-
-//     beforeEach(() => {
-//         wrapper = shallow(<GridContainer />);
-//     });
-
-//     it('should load user data', () => {
-//         return wrapper.postPreviewData('vnglst')
-//             .then(data => {
-//                 expect(data).toBeDefined()
-//                 expect(data.entity.name).toEqual('xxx')
-//             })
-//     })
-// })
-
-

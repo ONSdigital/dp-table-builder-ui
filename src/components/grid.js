@@ -2,17 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { HotTable } from '@handsontable/react';
-import Handsontable from 'handsontable/base';
-
+import { registerRenderer, textRenderer } from 'handsontable/renderers';
 
 class Grid extends Component {
     constructor(props) {
         super(props);
-    }
-
-
-    componentWillMount() {
-      
+        registerRenderer(textRenderer)
     }
 
     componentDidMount() {
@@ -58,10 +53,6 @@ class Grid extends Component {
         return shouldUpdate;
     }
 
-
-    componentWillUpdate() {
-    }
-
     componentDidUpdate(prevProps){
         // re-render hot after expand/collapse of meta
         if (this.props.formHide!=prevProps.formHide) this.callHotRender();
@@ -90,12 +81,9 @@ class Grid extends Component {
         return tableJsonOutput;
     }
 
-
     updateCellMouseOver(coords) {
         this.props.cellMove(coords);
     }
-
-
 
     // to help render when conditionally styling in grid for header/ cols 
     callHotRender(){
@@ -129,19 +117,20 @@ class Grid extends Component {
                    
                     if ((col <= colHeader-1) || (row <= rowHeader-1))  {
                         cellProperties.renderer =  function(instance, td) {
-                            Handsontable.renderers.TextRenderer.apply(this, arguments);
+                            textRenderer.apply(this, arguments);
                             td.style.fontWeight = 'bold';         
                         }
                     }
                     else  {
                         cellProperties.renderer =  function(instance, td) {
-                            Handsontable.renderers.TextRenderer.apply(this, arguments);
+                            textRenderer.apply(this, arguments);
                             td.style.fontWeight = 'normal';                
                         }
                     }
 
                     return cellProperties;
                 }}
+                licenseKey="non-commercial-and-evaluation"
             />
             <div style={emHeightStyle} id="emHeight">m</div>
         </div>;

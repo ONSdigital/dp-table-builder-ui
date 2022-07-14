@@ -4,10 +4,15 @@ import PropTypes from 'prop-types';
 import { HotTable } from '@handsontable/react';
 import { registerRenderer, textRenderer } from 'handsontable/renderers';
 
+import { registerPlugin, AutoColumnSize } from 'handsontable/plugins';
+import { ContextMenu } from 'handsontable/plugins/contextMenu';
+
 class Grid extends Component {
     constructor(props) {
         super(props);
         registerRenderer(textRenderer)
+        registerPlugin(AutoColumnSize)
+        registerPlugin(ContextMenu)
     }
 
     componentDidMount() {
@@ -40,7 +45,6 @@ class Grid extends Component {
             afterOnCellMouseOver: (event, coords, tableData) => {
                 this.updateCellMouseOver(coords);
             },
-
         });
     }
 
@@ -136,7 +140,6 @@ class Grid extends Component {
         </div>;
     }
 }
-
 
 Grid.propTypes = {
     colWidths: PropTypes.array,

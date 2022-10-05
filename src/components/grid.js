@@ -121,13 +121,13 @@ class Grid extends Component {
                    
                     if ((col <= colHeader-1) || (row <= rowHeader-1))  {
                         cellProperties.renderer =  function(instance, td) {
-                            textRenderer.apply(this, arguments);
+                            Handsontable.renderers.HtmlRenderer.apply(this, arguments);
                             td.style.fontWeight = 'bold';         
                         }
                     }
                     else  {
                         cellProperties.renderer =  function(instance, td) {
-                            textRenderer.apply(this, arguments);
+                            Handsontable.renderers.HtmlRenderer.apply(this, arguments);
                             td.style.fontWeight = 'normal';                
                         }
                     }

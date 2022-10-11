@@ -6,7 +6,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import GridContainer from '../../src/components/gridContainer';
 import MetaData from '../../src/components/metaData';
 import Grid from '../../src/components/grid';
-import HotTable from 'react-handsontable';
+import { HotTable } from '@handsontable/react';
 
 
 configure({ adapter: new Adapter() });

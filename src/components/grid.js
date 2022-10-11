@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import HotTable from 'react-handsontable';
+import { HotTable } from '@handsontable/react';
 import Handsontable from 'handsontable';
 
 

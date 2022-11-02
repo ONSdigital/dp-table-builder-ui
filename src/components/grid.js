@@ -2,16 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { HotTable } from '@handsontable/react';
 import Handsontable from 'handsontable';
-
-
 class Grid extends Component {
     constructor(props) {
         super(props);
-    }
-
-
-    componentWillMount() {
-      
     }
 
     componentDidMount() {
@@ -44,7 +37,6 @@ class Grid extends Component {
             afterOnCellMouseOver: (event, coords, tableData) => {
                 this.updateCellMouseOver(coords);
             },
-
         });
     }
 
@@ -53,12 +45,7 @@ class Grid extends Component {
                         || this.props.formHide!=nextProps.formHide 
                         || this.props.showGridHeaderCols!=nextProps.showGridHeaderCols
                         || this.props.showGridHeaderRows!=nextProps.showGridHeaderRows
-
         return shouldUpdate;
-    }
-
-
-    componentWillUpdate() {
     }
 
     componentDidUpdate(prevProps){
@@ -93,8 +80,6 @@ class Grid extends Component {
     updateCellMouseOver(coords) {
         this.props.cellMove(coords);
     }
-
-
 
     // to help render when conditionally styling in grid for header/ cols 
     callHotRender(){
@@ -138,7 +123,6 @@ class Grid extends Component {
                             td.style.fontWeight = 'normal';                
                         }
                     }
-
                     return cellProperties;
                 }}
             />

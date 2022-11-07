@@ -95,6 +95,7 @@ class Grid extends Component {
         const emHeightStyle = { visibility: "hidden", display: 'inline-block', fontSize: '1em', margin: 0, padding: 0, height: 'auto', lineHeight: 1, border: 0 };
         return <div className={classes}>
             <HotTable
+                licenseKey="non-commercial-and-evaluation"
                 root="hot"
                 renderAllRows="true"
                 renderAllColumns="true"

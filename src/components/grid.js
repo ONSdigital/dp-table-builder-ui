@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { HotTable } from '@handsontable/react';
 import Handsontable from 'handsontable';
+import 'handsontable/dist/handsontable.full.min.css';
+
 class Grid extends Component {
     constructor(props) {
         super(props);

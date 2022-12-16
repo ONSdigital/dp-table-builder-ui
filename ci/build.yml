@@ -6,7 +6,7 @@ image_resource:
   type: docker-image
   source:
     repository: node
-    tag: 14.14.5
+    tag: 14.15.5
 
 inputs:
   - name: dp-table-builder-ui

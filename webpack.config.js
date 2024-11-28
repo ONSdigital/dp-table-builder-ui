@@ -40,9 +40,12 @@ const config = {
             },
             {
                 test: /\.js$/,
-                loaders: [
-                    'babel-loader',
-                ],
+                use: {
+                    loader: "babel-loader",
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
+                },
                 exclude: /node_modules/,
             },
             {

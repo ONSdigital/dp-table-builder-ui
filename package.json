@@ -5,6 +5,7 @@
   "description": "Handsontable grid implementation",
   "main": "dist/index.js",
   "scripts": {
+    "audit": "npx --yes auditjs ossi --whitelist ./audit-allowlist.json --quiet",
     "start": "webpack-dev-server",
     "clean": "rimraf dist",
     "build": "babel src -d dist && npm run csscopy",

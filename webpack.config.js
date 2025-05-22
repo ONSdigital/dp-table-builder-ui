@@ -1,12 +1,10 @@
 const { resolve } = require('path');
 
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'cheap-module-source-map',
 
     entry: [
         'react-hot-loader/patch',
@@ -25,46 +23,29 @@ const config = {
     context: resolve(__dirname, 'src'),
 
     devServer: {
-        hot: true,
-        contentBase: resolve(__dirname, 'build'),
-        publicPath: '/'
+        static: resolve(__dirname, 'build'),
     },
+
+    mode: "development",
 
     module: {
         rules: [
             {
-                enforce: "pre",
                 test: /\.js$/,
-                exclude: /node_modules/,
-                loader: "eslint-loader"
-            },
-            {
-                test: /\.js$/,
-                loaders: [
-                    'babel-loader',
-                ],
+                loader: 'babel-loader',
                 exclude: /node_modules/,
             },
             {
                 test: /\.scss$/,
                 exclude: /node_modules/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        'css-loader',
-                        {
-                            loader: 'sass-loader',
-                            query: {
-                                sourceMap: false,
-                            },
-                        },
-                    ],
-                    publicPath: '../'
-                }),
+                use: [MiniCssExtractPlugin.loader, "css-loader"],
             },
             {
                 test: (/\.css$/),
-                loader: "style-loader!css-loader"
+                use: [
+                    { loader: 'style-loader'},
+                    { loader: 'css-loader'},
+                ]
             },        
             {
                 test: /\.(png|jpg|gif)$/,
@@ -143,8 +124,7 @@ const config = {
             },
         }),
         new webpack.optimize.ModuleConcatenationPlugin(),
-        new ExtractTextPlugin({ filename: './styles/style.css', disable: false, allChunks: true }),
-        // new CopyWebpackPlugin([{ from: 'vendors', to: 'vendors' }]),
+        new MiniCssExtractPlugin({ filename: './styles/style.css', }),
         new webpack.HotModuleReplacementPlugin(),
     ],
 };

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import HotTable from 'react-handsontable';
+import HotTable from '@handsontable/react';
 import Handsontable from 'handsontable';
-
+import 'handsontable/styles/handsontable.min.css';
+import 'handsontable/styles/ht-theme-horizon.css';
 
 class Grid extends Component {
     constructor(props) {
         super(props);
     }
-
 
     componentWillMount() {
       
@@ -41,7 +41,7 @@ class Grid extends Component {
             afterColumnResize: () => {
                 this.contentHasChanged();              
             },
-            afterOnCellMouseOver: (event, coords, tableData) => {
+            afterOnCellMouseOver: (event, coords) => {
                 this.updateCellMouseOver(coords);
             },
 
@@ -56,7 +56,6 @@ class Grid extends Component {
 
         return shouldUpdate;
     }
-
 
     componentWillUpdate() {
     }
@@ -89,12 +88,9 @@ class Grid extends Component {
         return tableJsonOutput;
     }
 
-
     updateCellMouseOver(coords) {
         this.props.cellMove(coords);
     }
-
-
 
     // to help render when conditionally styling in grid for header/ cols 
     callHotRender(){
@@ -103,47 +99,49 @@ class Grid extends Component {
     }
 
     render() {
-        let classes="grid";
+        let classes="grid ht-theme-horizon";
         if (this.props.formHide==true) classes+=" gridExpandFull"; else classes+=" gridExpandNormal"
         const emHeightStyle = { visibility: "hidden", display: 'inline-block', fontSize: '1em', margin: 0, padding: 0, height: 'auto', lineHeight: 1, border: 0 };
-        return <div className={classes}>
-            <HotTable
-                root="hot"
-                renderAllRows="true"
-                renderAllColumns="true"
-                data={this.props.handsontableData}
-                contextMenu = {['row_above', 'row_below','---------','col_left','col_right','---------', 'remove_row','remove_col','---------','undo','redo','---------','alignment','---------','mergeCells','---------','copy','cut',"(Use 'ctrl+v' to paste)"]}
-                colHeaders={true} // this should be the same as ignore_first_row 
-                rowHeaders={true} // this should be the same as ignore_first_column 
-                manualColumnResize={true}
-                manualRowResize={false}
-                colWidths={this.props.colWidths}
-                mergeCells={this.props.mergeCells}
-                cell={this.props.cellAlignments}
-                ref={(c) => { this.tableRef = c; }}
-                cells= { (row, col)=> {
-                    const cellProperties = {};
-                    const rowHeader=this.props.showGridHeaderRows || -1 
-                    const colHeader=this.props.showGridHeaderCols || -1 
-                   
-                    if ((col <= colHeader-1) || (row <= rowHeader-1))  {
-                        cellProperties.renderer =  function(instance, td) {
-                            Handsontable.renderers.HtmlRenderer.apply(this, arguments);
-                            td.style.fontWeight = 'bold';         
+        return (
+            <div className={classes}>
+                <HotTable
+                    root="hot"
+                    renderAllRows="true"
+                    renderAllColumns="true"
+                    data={this.props.handsontableData}
+                    contextMenu = {['row_above', 'row_below','---------','col_left','col_right','---------', 'remove_row','remove_col','---------','undo','redo','---------','alignment','---------','mergeCells','---------','copy','cut',"(Use 'ctrl+v' to paste)"]}
+                    colHeaders={true} // this should be the same as ignore_first_row 
+                    rowHeaders={true} // this should be the same as ignore_first_column 
+                    manualColumnResize={true}
+                    manualRowResize={false}
+                    colWidths={this.props.colWidths}
+                    mergeCells={this.props.mergeCells}
+                    cell={this.props.cellAlignments}
+                    ref={(c) => { this.tableRef = c; }}
+                    cells= { (row, col)=> {
+                        const cellProperties = {};
+                        const rowHeader=this.props.showGridHeaderRows || -1 
+                        const colHeader=this.props.showGridHeaderCols || -1 
+                    
+                        if ((col <= colHeader-1) || (row <= rowHeader-1))  {
+                            cellProperties.renderer =  function(instance, td) {
+                                Handsontable.renderers.HtmlRenderer.apply(this, arguments);
+                                td.style.fontWeight = 'bold';         
+                            }
                         }
-                    }
-                    else  {
-                        cellProperties.renderer =  function(instance, td) {
-                            Handsontable.renderers.HtmlRenderer.apply(this, arguments);
-                            td.style.fontWeight = 'normal';                
+                        else  {
+                            cellProperties.renderer =  function(instance, td) {
+                                Handsontable.renderers.HtmlRenderer.apply(this, arguments);
+                                td.style.fontWeight = 'normal';                
+                            }
                         }
-                    }
 
-                    return cellProperties;
-                }}
-            />
-            <div style={emHeightStyle} id="emHeight">m</div>
-        </div>;
+                        return cellProperties;
+                    }}
+                />
+                <div style={emHeightStyle} id="emHeight">m</div>
+            </div>
+        )
     }
 }
 

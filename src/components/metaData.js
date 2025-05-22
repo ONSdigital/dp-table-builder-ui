@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-
-
 class MetaData extends Component {
 
     constructor(props) {
@@ -14,14 +12,12 @@ class MetaData extends Component {
         this.onExpandNotes = this.onExpandNotes.bind(this);
     }
 
-   
     componentDidUpdate() {
         if (this.state.expandNotes===true && this.state.notesFocusflag===true) {
             this.metaNotesRef.focus();
             this.setState({notesFocusflag:false})
         }
     }
-
 
     getMetaContent(event) {
         let key = event.target.id
@@ -44,7 +40,6 @@ class MetaData extends Component {
 
     }
 
-
     onExpandNotes() {
        
         this.setState({
@@ -52,8 +47,6 @@ class MetaData extends Component {
             notesFocusflag:!this.state.expandNotes
         });
     }
-
-
 
     render() {
         const metaContainerVisibility = this.props.formHide === true? " hide": " show";
@@ -124,8 +117,6 @@ class MetaData extends Component {
     }
 }
 
-
-
 MetaData.propTypes = {
     metaTitle: PropTypes.string,
     metaSubtitle: PropTypes.string,
@@ -141,6 +132,5 @@ MetaData.propTypes = {
     formHide:PropTypes.bool
    
 };
-
 
 export default MetaData;

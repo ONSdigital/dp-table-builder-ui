@@ -1,12 +1,4 @@
-// import { HttpError } from './error';
-// import log, { eventTypes } from '../log';
-// import uuid from 'uuid/v4';
-// import user from '../api-clients/user';
-// import notifications from '../notifications';
 import "babel-polyfill"
-
-
-
 
 /**
  * 
@@ -73,16 +65,6 @@ export default function request(method, URI, willRetry = true, onRetry, body, ca
                     return;
                 }
 
-                // To save doing this exact same function throughout the app we handle a 401 
-                // here (ie at the lowest level possible)
-                const notification = {
-                    type: "neutral",
-                    message: "Your session has expired so you've been redirected to the login screen",
-                    isDismissable: true,
-                    autoDismiss: 20000
-                }
-                //  user.logOut();
-                //  notifications.add(notification);
                 reject({ status: response.status, message: response.statusText });
                 return;
             }

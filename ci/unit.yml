@@ -11,8 +11,5 @@ image_resource:
 inputs:
   - name: dp-table-builder-ui
 
-outputs:
-  - name: build
-
 run:
-  path: dp-table-builder-ui/ci/scripts/build.sh
+  path: dp-table-builder-ui/ci/scripts/unit.sh

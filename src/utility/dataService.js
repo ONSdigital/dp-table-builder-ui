@@ -4,10 +4,6 @@ const responseJson = 'json';
 const responseBlob = 'blob';
 
 export default class DataService {
-
-   
-   
-
     static tablepostPreview(body,uri) {
         return http.post(uri,body,true,false,responseJson)
             .then(response => {
@@ -17,7 +13,7 @@ export default class DataService {
 
 
     // renders as xls, csv for downloading - responseformat is blob
-    static tableRenderFilePreview(body,uri,fileType) {
+    static tableRenderFilePreview(body,uri) {
         return http.post(uri,body,true,false,responseBlob)
             .then(response => {
                 return response;

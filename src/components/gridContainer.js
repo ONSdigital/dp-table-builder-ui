@@ -159,7 +159,7 @@ class GridContainer extends Component {
             if (this.state.isDirty) {
                 // call parse endpoint first then save
                 const prom = this.postPreviewData(this.processHandsontableData());
-                prom.then((previewData) => { 
+                prom.then(() => { 
                     let renderJson = this.state.parsedData.render_json;
                     if (this.props.onSave) {
                         this.props.onSave(renderJson);
@@ -193,7 +193,7 @@ class GridContainer extends Component {
     onPreviewGrid() {
         if (this.isValidTable()) {
             const prom = this.postPreviewData(this.processHandsontableData());
-            prom.then((previewData) => {   
+            prom.then(() => {   
                 // change to preview only if promise resolved
                 this.changeView('preview');
                 this.setDataDirty(false); 
@@ -292,21 +292,14 @@ class GridContainer extends Component {
         this.setState({ colWidths: colWidths });
     }
 
-
-
-
-
     // MergeCells render_json > handsontable
     // filter form render_json if contains rowspan
     setMergeCells(cellformats) {
         let mergeArr = cellformats.filter((obj) => {
-            return obj.hasOwnProperty("rowspan");
+            return Object.hasOwn(obj, "rowspan");
         });
         this.setState({ mergeCells: mergeArr });
     }
-
-
-
 
     setCellAlignments(parsedData) {
     // in  {row: 1, col: 1, align: "Left", vertical_align:"Middle"}
@@ -317,7 +310,7 @@ class GridContainer extends Component {
         let cellAlignments = [];
    
         cellformats.forEach((entry) => {
-            if (entry.hasOwnProperty("align") || entry.hasOwnProperty("vertical_align")) {
+            if (Object.hasOwn(entry, "align") || Object.hasOwn(entry, "vertical_align")) {
                 cellAlignments.push({ row: entry.row, col: entry.col, className: this.getMapAlignmentClass(entry) });
             }
         });
@@ -325,7 +318,7 @@ class GridContainer extends Component {
         //for entire col alignment we need to iterate over column_formats
         //that was returned from the parser and add cell alignment array per cell for col
         colformats.forEach((entry) => {
-            if (entry.hasOwnProperty("align")) {
+            if (Object.hasOwn(entry, "align")) {
                 for (let i = 0; i < parsedData.data.length; i++) { 
                     cellAlignments.push({ row: i, col: entry.col, className: this.getMapAlignmentClass(entry) });
                 }
@@ -335,12 +328,9 @@ class GridContainer extends Component {
         this.setState({ cellAlignments: cellAlignments });
     }
 
-
-
-
     getMapAlignmentClass(cellObj) {
         let className = " ";
-        if (cellObj.hasOwnProperty("align")) {
+        if (Object.hasOwn(cellObj, "align")) {
 
             switch (cellObj.align) {
             case "Left":
@@ -355,7 +345,7 @@ class GridContainer extends Component {
             }
         }
 
-        if (cellObj.hasOwnProperty("vertical_align")) {
+        if (Object.hasOwn(cellObj, "vertical_align")) {
             switch (cellObj.vertical_align) {
             case "Top":
                 className += "htTop";
@@ -372,22 +362,18 @@ class GridContainer extends Component {
         return className.trim();
     }
 
-
-
     // extract the HeaderCol num from column_formats json
     // when loading an existing table
     getHeaderColumnCount(data) {
         const colformats = data.column_formats;
         let colCount=0;
         colformats.forEach((entry) => {
-            if (entry.hasOwnProperty("heading")) {
+            if (Object.hasOwn(entry, "heading")) {
                 colCount++;
             }
         });
         return colCount;
     }
-    
-
 
     // extract the HeaderRow  num from row_formats json
     // when loading an existing table
@@ -395,25 +381,21 @@ class GridContainer extends Component {
         const rowformats = data.row_formats;
         let rowCount=0;
         rowformats.forEach((entry) => {
-            if (entry.hasOwnProperty("heading")) {
+            if (Object.hasOwn(entry, "heading")) {
                 rowCount++;
             }
         });
         return rowCount;
     }
 
-
-    
     // extract the Meta notes string from footnotes json
     // when loading an existing table
     getFootNotes(data) {
         return  data.toString().replace(",","\n",-1);       
     }
 
-
-
     postPreviewData(data) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const uri = this.state.rendererUri + '/parse/html'
             const prm = DataService.tablepostPreview(data,uri)
        

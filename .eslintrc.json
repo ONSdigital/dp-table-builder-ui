@@ -14,9 +14,6 @@
         }
     },
     "rules" : {
-        "no-unused-vars" : 1,
-        "no-undef" : 2,
-        "no-console": 0,
         "indent": 2,
         "react/no-set-state": 0,
         "react/prop-types": 1,

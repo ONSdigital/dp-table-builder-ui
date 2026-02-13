@@ -1,0 +1,8 @@
+{
+    "ignore": [
+        {
+            "id" : "CVE-2025-48050",
+            "reason" : "dompurify@3.2.6 We don't manually start the local web server."
+        }
+    ]
+}

@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import React from 'react';
 import { shallow, configure, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
@@ -7,7 +11,6 @@ import GridContainer from '../../src/components/gridContainer';
 import MetaData from '../../src/components/metaData';
 import Grid from '../../src/components/grid';
 import HotTable from 'react-handsontable';
-
 
 configure({ adapter: new Adapter() });
 

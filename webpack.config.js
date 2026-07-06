@@ -28,7 +28,11 @@ const config = {
         hot: true,
         open: true,
         contentBase: resolve(__dirname, 'build'),
-        publicPath: '/'
+        publicPath: '/',
+        proxy: {
+            '/parse': 'http://localhost:23300',
+            '/render': 'http://localhost:23300'
+        }
     },
 
     module: {

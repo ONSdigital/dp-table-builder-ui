@@ -9,8 +9,6 @@ import FileSaver from 'file-saver';
 import DataService from '../utility/dataService';
 
 
-const defaultRendererUri = 'http://localhost:23300';
-
 const ignore_first_row = true;
 const ignore_first_column = true;
 const no_headers_error_message = "No headers have been set. Please set at least one header column or header row."
@@ -34,7 +32,7 @@ class GridContainer extends Component {
 
         this.state = {
             view: 'editTable',
-            rendererUri: props.rendererUri ? props.rendererUri : defaultRendererUri,
+            rendererUri: props.rendererUri || '',
             tableJsonOutput: {},
             handsontableData: [["","",""], ["","",""]],
             previewHtml: '',

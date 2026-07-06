@@ -300,7 +300,7 @@ class GridContainer extends Component {
     // filter form render_json if contains rowspan
     setMergeCells(cellformats) {
         let mergeArr = cellformats.filter((obj) => {
-            return obj.hasOwnProperty("rowspan");
+            return Object.prototype.hasOwnProperty.call(obj, "rowspan");
         });
         this.setState({ mergeCells: mergeArr });
     }
@@ -317,7 +317,7 @@ class GridContainer extends Component {
         let cellAlignments = [];
    
         cellformats.forEach((entry) => {
-            if (entry.hasOwnProperty("align") || entry.hasOwnProperty("vertical_align")) {
+            if (Object.prototype.hasOwnProperty.call(entry, "align") || Object.prototype.hasOwnProperty.call(entry, "vertical_align")) {
                 cellAlignments.push({ row: entry.row, col: entry.col, className: this.getMapAlignmentClass(entry) });
             }
         });
@@ -325,7 +325,7 @@ class GridContainer extends Component {
         //for entire col alignment we need to iterate over column_formats
         //that was returned from the parser and add cell alignment array per cell for col
         colformats.forEach((entry) => {
-            if (entry.hasOwnProperty("align")) {
+            if (Object.prototype.hasOwnProperty.call(entry, "align")) {
                 for (let i = 0; i < parsedData.data.length; i++) { 
                     cellAlignments.push({ row: i, col: entry.col, className: this.getMapAlignmentClass(entry) });
                 }
@@ -340,7 +340,7 @@ class GridContainer extends Component {
 
     getMapAlignmentClass(cellObj) {
         let className = " ";
-        if (cellObj.hasOwnProperty("align")) {
+        if (Object.prototype.hasOwnProperty.call(cellObj, "align")) {
 
             switch (cellObj.align) {
             case "Left":
@@ -355,7 +355,7 @@ class GridContainer extends Component {
             }
         }
 
-        if (cellObj.hasOwnProperty("vertical_align")) {
+        if (Object.prototype.hasOwnProperty.call(cellObj, "vertical_align")) {
             switch (cellObj.vertical_align) {
             case "Top":
                 className += "htTop";
@@ -380,7 +380,7 @@ class GridContainer extends Component {
         const colformats = data.column_formats;
         let colCount=0;
         colformats.forEach((entry) => {
-            if (entry.hasOwnProperty("heading")) {
+            if (Object.prototype.hasOwnProperty.call(entry, "heading")) {
                 colCount++;
             }
         });
@@ -395,7 +395,7 @@ class GridContainer extends Component {
         const rowformats = data.row_formats;
         let rowCount=0;
         rowformats.forEach((entry) => {
-            if (entry.hasOwnProperty("heading")) {
+            if (Object.prototype.hasOwnProperty.call(entry, "heading")) {
                 rowCount++;
             }
         });
@@ -547,8 +547,8 @@ class GridContainer extends Component {
                         metaSource={this.state.metaSource}
                         metaNotes={this.state.metaNotes}
                         metaNotesExp={this.state.metaNotesExp}
-                        metaHeadercols={this.state.metaHeadercols}
-                        metaHeaderrows={this.state.metaHeaderrows}
+                        metaHeadercols={parseInt(this.state.metaHeadercols, 10) || 0}
+                        metaHeaderrows={parseInt(this.state.metaHeaderrows, 10) || 0}
                         metaSizeunits={this.state.metaSizeunits}
 
                     />
@@ -564,8 +564,8 @@ class GridContainer extends Component {
                         cellMove={this.cellMove}
                         setDataDirty={this.setDataDirty}
                         ref={instance => { this.grid = instance; }}
-                        showGridHeaderRows={this.state.metaHeaderrows}
-                        showGridHeaderCols={this.state.metaHeadercols}
+                        showGridHeaderRows={parseInt(this.state.metaHeaderrows, 10) || 0}
+                        showGridHeaderCols={parseInt(this.state.metaHeadercols, 10) || 0}
                     />&nbsp;<br />
                 </div>;
         }

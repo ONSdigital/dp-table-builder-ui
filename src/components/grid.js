@@ -9,11 +9,6 @@ class Grid extends Component {
         super(props);
     }
 
-
-    componentWillMount() {
-      
-    }
-
     componentDidMount() {
         let Hot = this.tableRef.hotInstance;
         Hot.updateSettings({
@@ -55,10 +50,6 @@ class Grid extends Component {
                         || this.props.showGridHeaderRows!=nextProps.showGridHeaderRows
 
         return shouldUpdate;
-    }
-
-
-    componentWillUpdate() {
     }
 
     componentDidUpdate(prevProps){

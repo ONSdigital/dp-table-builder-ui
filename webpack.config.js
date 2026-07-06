@@ -1,11 +1,11 @@
 const { resolve } = require('path');
 
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 const config = {
+    mode: 'development',
     devtool: 'cheap-module-eval-source-map',
 
     entry: [
@@ -26,6 +26,7 @@ const config = {
 
     devServer: {
         hot: true,
+        open: true,
         contentBase: resolve(__dirname, 'build'),
         publicPath: '/'
     },
@@ -48,19 +49,16 @@ const config = {
             {
                 test: /\.scss$/,
                 exclude: /node_modules/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        'css-loader',
-                        {
-                            loader: 'sass-loader',
-                            query: {
-                                sourceMap: false,
-                            },
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: false,
                         },
-                    ],
-                    publicPath: '../'
-                }),
+                    },
+                ],
             },
             {
                 test: (/\.css$/),
@@ -142,9 +140,7 @@ const config = {
                 }
             },
         }),
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        new ExtractTextPlugin({ filename: './styles/style.css', disable: false, allChunks: true }),
-        // new CopyWebpackPlugin([{ from: 'vendors', to: 'vendors' }]),
+        new MiniCssExtractPlugin({ filename: './styles/style.css' }),
         new webpack.HotModuleReplacementPlugin(),
     ],
 };

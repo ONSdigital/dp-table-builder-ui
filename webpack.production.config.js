@@ -2,9 +2,10 @@ const { resolve } = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
+  mode: 'production',
   devtool: 'cheap-module-source-map',
 
   entry: [
@@ -21,27 +22,17 @@ const config = {
   },
 
   plugins: [
-    new webpack.optimize.ModuleConcatenationPlugin(),
     new HtmlWebpackPlugin({
       template: `${__dirname}/app/index.html`,
       filename: 'index.html',
       inject: 'body',
     }),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false,
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      beautify: false
-    }),
-    new webpack.DefinePlugin({ 'process.env': { NODE_ENV: JSON.stringify('production') } }),
-    new ExtractTextPlugin({ filename: './styles/style.css', disable: false, allChunks: true }),
+    new MiniCssExtractPlugin({ filename: './styles/style.css' }),
     //new CopyWebpackPlugin([{ from: './vendors', to: 'vendors' }]),
   ],
 
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js?$/,
         exclude: /node_modules/,
@@ -50,14 +41,11 @@ const config = {
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            'css-loader',
-            { loader: 'sass-loader', query: { sourceMap: false } },
-          ],
-          publicPath: '../'
-        }),
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          { loader: 'sass-loader', options: { sourceMap: false } },
+        ],
       },
       {
         test: (/\.css$/),

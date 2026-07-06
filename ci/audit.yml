@@ -1,5 +1,4 @@
 ---
-
 platform: linux
 
 image_resource:
@@ -11,9 +10,5 @@ image_resource:
 inputs:
   - name: dp-table-builder-ui
 
-outputs:
-  - name: build
-  - name: package
-
 run:
-  path: dp-table-builder-ui/ci/scripts/build.sh
+  path: dp-table-builder-ui/ci/scripts/audit.sh

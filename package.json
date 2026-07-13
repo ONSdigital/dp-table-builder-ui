@@ -5,6 +5,7 @@
   "description": "Handsontable grid implementation",
   "main": "dist/index.js",
   "scripts": {
+    "audit": "npx auditjs ossi --whitelist ./audit-allowlist.json --quiet -u $OSSINDEX_USERNAME -p $OSSINDEX_TOKEN",
     "start": "webpack-dev-server",
     "clean": "rimraf dist",
     "build": "babel src -d dist && npm run csscopy",
@@ -98,6 +99,7 @@
     "jest": "^30.4.1",
     "jest-environment-jsdom": "^30.4.1",
     "sass": "^1.101.0",
+    "auditjs": "^5.0.2",
     "webpack-cli": "^3.3.12",
     "react-test-renderer": "16.13.1",
     "rimraf": "2.6.2",

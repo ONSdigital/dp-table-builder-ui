@@ -14,31 +14,31 @@ NPM = $(NVM_EXEC) npm
 
 .PHONY: audit
 audit: ## Runs audit check
-	npm audit
+	$(NPM) run audit
 
 .PHONY: build
 build: ## Builds into npm package
-	npm run build
+	$(NPM) run build
 
 .PHONY: debug
 debug: ## Runs dev server
-	npm run start
+	$(NPM) run start
 
 .PHONY: lint
 lint: ## Runs lint checks
-	npm run lint
+	$(NPM) run lint
 
 .PHONY: test
 test: ## Runs tests
-	npm run test
+	$(NPM) run test
 
 .PHONY: node-modules
 node-modules: ## Builds dependencies
-	npm install --legacy-peer-deps
+	$(NPM) install --legacy-peer-deps
 
 .PHONY: clean
 clean: ## Deletes built assets
-	npm run clean
+	$(NPM) run clean
 
 .PHONY: help
 help: ## Show help page for list of make targets

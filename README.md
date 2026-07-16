@@ -51,6 +51,22 @@ Once you have installed those dependencies and cloned this repo you need to run 
 - `make clean` Deletes built assets
 - `make help` - Show help page for list of make targets
 
+## Releasing
+
+This package is published to npm at [npmjs.com/package/dp-table-builder-ui](https://www.npmjs.com/package/dp-table-builder-ui).
+
+To release a new version:
+
+1. Bump the `version` field in `package.json` following the [ONS versioning guide](https://github.com/ONSdigital/dp/blob/main/guides/VERSIONING.md)
+1. Run `npm install` to update `package-lock.json`
+1. Commit, raise a PR and merge to `main` - NB. DO NOT PUSH THE MERGED PR UP TO GITHUB UNTIL AFTER TAGGING IT (SEE NEXT STEP)
+1. Tag the merged commit, and push up the merge using `--follow-tags`, as explained in the [ONS tagging guide](https://github.com/ONSdigital/dp/blob/main/guides/TAGS.md)
+1. The CI pipeline publishes the package to npm on the tagged commit
+
+## Dependencies
+
+- No further dependencies other than those defined in `package.json`
+
 ## Troubleshooting
 
 ### Error saying python2 not found in path for macOS users
